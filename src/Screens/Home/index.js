@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   StatusBar,
+  Button
 } from 'react-native';
 import React, { useState } from 'react';
 import RootView from '../../Components/RootView';
@@ -14,9 +15,24 @@ import { Colors, Metrics } from '../../Theme';
 import Images from '../../Utils/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Navigator from '../../Utils/Navigator';
-import Entypo from 'react-native-vector-icons/Entypo'
+import Entypo from 'react-native-vector-icons/Entypo';
+import { useInitializeAgora, useRequestAudioHook } from '../../Components/Hooks/hooks';
 
 export default function Home() {
+  useRequestAudioHook();
+  const {
+    channelName,
+    isMute,
+    isSpeakerEnable,
+    joinSucceed,
+    peerIds,
+    setChannelName,
+    joinChannel,
+    leaveChannel,
+    toggleIsMute,
+    toggleIsSpeakerEnable,
+  } = useInitializeAgora();
+
   return (
     <RootView statusBar={Colors.primary} >
       <StatusBar backgroundColor={Colors.primary} barStyle='light-content' />
@@ -39,15 +55,29 @@ export default function Home() {
         </View>
       </View>
       <View style={{flex:1,justifyContent:'center'}}>
-      <TouchableOpacity
+      {/* <Button
+            onPress={peerIds.length > 2 ? alert('Only 2 User are Allowed in the Channel') : joinSucceed ? leaveChannel : joinChannel}
+            title={`${joinSucceed ? 'Leave' : 'Join'} channel`}
+          /> */}
+
+{joinSucceed &&
+<>
+          <Text style={{alignSelf:'center',fontWeight:'bold',fontSize:26}}>Connection Status</Text>
+          <Text style={{alignSelf:'center',fontWeight:'bold',fontSize:16}}>{peerIds.length > 1 ? 'Connected' : 'Ringing'}</Text>
+          </>
+}
+          <TouchableOpacity style={{width:150,height:150,backgroundColor:joinSucceed ? 'red' : 'pink',alignSelf:'center',borderRadius:120}} onPress={ joinSucceed ? leaveChannel : joinChannel}>
+            <Text style={{alignSelf:'center',marginTop:60,color:joinSucceed ? 'white' : 'black'}}>{joinSucceed ? 'End Call' : 'Make a Call'}</Text>
+          </TouchableOpacity>
+      {/* <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => Navigator.navigate('RecordAudio')}>
+        onPress={peerIds.length > 2 ? alert('Only 2 User are Allowed in the Channel') : joinSucceed ? leaveChannel : joinChannel}>
         <View style={styles.outerView}>
           <View style={styles.innerView}>
             <Icon name="microphone" color={Colors.white} size={150} />
           </View>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       </View>
 
       <View style={{paddingVertical:Metrics.defaultMargin}}>
