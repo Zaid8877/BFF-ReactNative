@@ -15,7 +15,8 @@ const colors = {
   transparent: '#00000000',
   blue: '#007AFF',
   lightGrey: '#F0F0F0',
-  grey:'#6e6d6d'
+  grey:'#6e6d6d',
+  black_20: 'rgba(0, 0, 0, 0.2)',
 };
 
 export default colors;

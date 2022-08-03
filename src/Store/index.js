@@ -1,10 +1,13 @@
-import { createStore } from "redux";
+import { createStore,applyMiddleware, compose,  } from "redux";
 import reducers from "../Store/reducers";
 import AsyncStorage from "@react-native-community/async-storage";
 import { persistStore, persistReducer } from "redux-persist";
 import SplashScreen from 'react-native-splash-screen'
+import thunk from 'redux-thunk';
 
 //REDUX SETUP
+
+import reactotron from '../Configs/ReactotronConfig';
 
 const persistConfig = {
     key: "root",
@@ -13,10 +16,10 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
+const enhancer = compose(applyMiddleware(thunk), reactotron.createEnhancer());
 
 const store = createStore(
-    persistedReducer,
-    {}
+    persistedReducer,enhancer
 );
 const persistor = persistStore(store, {}, () => {
     SplashScreen.hide();
