@@ -45,6 +45,7 @@ const Verification = ({route})=> {
     Keyboard.dismiss();
     const params = {
       email: email.trim().toLowerCase(),
+      otp:code
     };
     const verifyOTPResponse = await onCallVerifyOTPApi(params);
     const {ok = false, status, data = {}} = verifyOTPResponse || {};
@@ -53,7 +54,7 @@ const Verification = ({route})=> {
         showToast(data.message)
       }
       else{
-        // Navigator.navigate('Verification',{email:email})
+        Navigator.navigate('ChangePassword',{email:email})
       }
     } else {
       const {message = ''} = data || {};
@@ -73,7 +74,7 @@ const Verification = ({route})=> {
         tintColor={Colors.primary}
       />
       <Text style={styles.smallText}>Resend in 00:30</Text>
-      <Button disabled={isCodeEntered} text='Send' onPress={()=>Navigator.navigate('SignIn')}/>
+      <Button disabled={isCodeEntered} text='Send' onPress={()=>verifyOTP()}/>
     </RootView>
   )
 }

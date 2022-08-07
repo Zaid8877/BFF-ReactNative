@@ -4,6 +4,7 @@ const auth = {
   forgotPassword:'/auth/forgot_password',
   verifyOTP:'/auth/verify_otp',
   updatePasswordByOTP:'/auth/update_passwoed_by_otp',
+  updatePasswordByEmail:'/auth/update_passwoed_by_email',
 };
 
 const user= {
@@ -12,7 +13,20 @@ const user= {
 
 }
 
-
+const contact= {
+  addContact:'/user_contact/add',
+  deleteContact:'/user_contact/delete',///{id}',
+  geAllContact:'/user_contact/get_my_all_contacts',//?page_no=1&page_size=10',
+}
+const channels={
+  getAllMyChannels:'/channel/get_my_all_channels',//?page_no=1&page_size=10
+  create:'/channel/create',
+  update:'/channel/update',
+  delete:'channel/delete',///{id}
+}
 export default {
-  auth
+  auth,
+  user,
+  contact,
+  channels
 };

@@ -1,14 +1,14 @@
 import {SIGN_IN,SIGN_UP,SIGN_OUT} from '../types/user';
 
-export const signIn = (payload)=>{
-    return {
+export const signIn = payload=>dispatch=>{
+    dispatch({
         type:SIGN_IN,
-        payload:payload
-    }
+        payload
+    })
 }
 
-export const signOut = ()=>{
-    return {
+export const signOut = ()=>dispatch=>{
+    dispatch({
         type:SIGN_OUT,
-    }
+    })
 }

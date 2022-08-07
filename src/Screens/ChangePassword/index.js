@@ -12,17 +12,19 @@ import ApiService from "../../Services/ApiService";
 import {API_STATUS, APP_STRINGS, isEmailValid, isFieldEmpty, isNameFieldValid, isPasswordValid} from "../../Constants";
 import {showToast} from "../../Utils/ToastUtils";
 
-const ChangePassword = () => {
-    const [email, setEmail] = useState('');
+const ForgotPassword = ({route}) => {
+    const {email}=route.params
+    const [password,setPassword]=useState('')
+    const [confirmPassword, setConfirmPassword]=useState('')
 
-    const [isForgotPasswordButtonVisible, setIsForgotPasswordButtonVisible] = useState(false);
+    const [isChangePasswordVisibile, setIsChangeaPasswordVisibile] = useState(false);
 
     const {
-        onCallApi: onCallForgotPasswordApi,
-        loading: forgotPasswordLoading,
+        onCallApi: onCallChangePasswordApi,
+        loading: changePasswordPasswordLoading,
     } = useApiWrapper({
         type: REQUEST_METHOD.POST,
-        endPoint: ApiService.auth.forgotPassword,
+        endPoint: ApiService.auth.updatePasswordByOTP,
     });
 
     useEffect(() => {
@@ -31,7 +33,7 @@ const ChangePassword = () => {
 
 
     const validateFields = () => {
-        if (!isFieldEmpty(email) && (isEmailValid(email)  || isPasswordValid(email)))
+        if (isPasswordValid(password) && isConfirmPasswordCorrect(password, confirmPassword))
             setIsForgotPasswordButtonVisible(false)
         else {
             setIsForgotPasswordButtonVisible(true)
@@ -42,14 +44,14 @@ const ChangePassword = () => {
         const params = {
             email: email.trim().toLowerCase(),
         };
-        const forgotPasswordResponse = await onCallForgotPasswordApi(params);
-        const {ok = false, status, data = {}} = forgotPasswordResponse || {};
+        const changePasswordResponse = await onCallChangePasswordApi(params);
+        const {ok = false, status, data = {}} = changePasswordResponse || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
             if(data.error){
                 showToast(data.message)
             }
             else{
-                Navigator.navigate('Verification',{email:email})
+                Navigator.navigate('SignIn')
             }
         } else {
             const {message = ''} = data || {};
@@ -62,12 +64,20 @@ const ChangePassword = () => {
             <Heading text="Forgot Password"/>
             <Text style={styles.text}>Please type your email or phone number below</Text>
             <Input
-                value={email}
-                onChangeText={(val) => setEmail(val)}
-                placeholder='Email or Phone Number'
-                keyboardType='email-address'
+                value={password}
+                onChangeText={(val) => setPassword(val)}
+                placeholder='Password'
+                secureTextEntry
+                icon='lock-outline'
             />
-            <Button text='Send' disabled={isForgotPasswordButtonVisible} onPress={() =>
+            <Input
+                value={confirmPassword}
+                onChangeText={(val) => setConfirmPassword(val)}
+                placeholder='Password'
+                secureTextEntry
+                icon='lock-outline'
+            />
+            <Button text='Send' disabled={isChangePasswordVisibile} onPress={() =>
                 // Navigator.navigate('Verification')
                 forgotPassword()
             }
@@ -86,4 +96,4 @@ const styles = StyleSheet.create({
         marginVertical: Metrics.defaultMargin
     }
 })
-export default ChangePassword;
+export default ForgotPassword;

@@ -10,13 +10,12 @@ function setTopLevelNavigator(navigatorRef) {
 
 function navigate(name, params) {
   navigator.dispatch(
-    CommonActions.navigate({
-      name,
-      params
-    })
+      CommonActions.navigate({
+        name,
+        params
+      })
   );
 }
-
 function push(name, params) {
   navigator.dispatch(
     StackActions.push(

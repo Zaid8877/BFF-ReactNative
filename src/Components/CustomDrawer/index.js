@@ -10,6 +10,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Navigator from '../../Utils/Navigator';
 import { useDispatch } from 'react-redux';
 import { signOut } from '../../Store/actions/user';
+import useUserState from "../../CustomHooks/useUserState";
 
 const { screenWidth } = Metrics;
 
@@ -70,6 +71,10 @@ const CustomDrawerItem = ({ item, focused }) => {
 export default function CustomDrawer(props) {
   const { index } = props.state;
   const dispatch = useDispatch()
+  const userInfo=useUserState()
+  const name= userInfo? userInfo.name:''
+  const user_name= userInfo? userInfo.user_name:''
+  const firstLetter= userInfo? userInfo.name.charAt(0).toUpperCase():''
   return (
     <View style={{
       flex: 1,
@@ -96,20 +101,20 @@ export default function CustomDrawer(props) {
                 justifyContent: 'center'
               }}
             >
-              <Text style={{ textAlign: 'center', color: Colors.light, fontSize: 36, fontWeight: 'bold' }}>{'R'}</Text>
+              <Text style={{ textAlign: 'center', color: Colors.light, fontSize: 36, fontWeight: 'bold' }}>{firstLetter}</Text>
             </View>
             <View style={{ marginLeft: 20, flex: 1 }}>
               <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 5, color: Colors.textDark }}>
-                Ralph Edwards
+                {name}
               </Text>
-              <Text style={{ fontSize: 16, color: Colors.grey }}>Ralph Edwards</Text>
+              <Text style={{ fontSize: 16, color: Colors.grey }}>{user_name}</Text>
             </View>
 
           </View>
         </TouchableOpacity>
         <ScrollView bounces={false} style={{ marginBottom: screenWidth * 0.4, overflow: 'visible' }} showsVerticalScrollIndicator={false}>
           {screens.map((item, i) => <CustomDrawerItem item={item} focused={index == i} />)}
-          
+
           <CustomDrawerItem item={{
             name: 'Log Out',
             icon: 'power-off',

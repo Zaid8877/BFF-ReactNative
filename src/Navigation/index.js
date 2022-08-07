@@ -1,29 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { connect } from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import HomeStack from "./HomeStack";
 import Navigator from "../Utils/Navigator"
 import AuthStack from './AuthStack'
 import { ActivityIndicator,View } from "react-native";
 import { Colors } from "../Theme";
 import BottomTab from "./BottomTab";
+import {onBoarding} from "../Store/actions/user";
+import {onBoardingReducer} from "../Store/reducers/onBoardingReducer";
+import {logToConsole} from "../Configs/ReactotronConfig";
+import {userReducer} from "../Store/reducers/user";
+import useUserState from "../CustomHooks/useUserState";
 
 
-const AuthLoading = ({ userReducer }) => {
+const AuthLoading = () => {
+    const userInfo=useUserState()
 
+    // const userFromState=useUserState()
+  logToConsole({RootNavigation: userInfo})
+  // logToConsole({RootNavigationUserFroMState: userFromState})
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false)
-
   useEffect(() => {
     setLoading(true)
-    if (userReducer) {
+    if (userInfo && userInfo.token) {
       setLoggedIn(true)
     }
     else {
       setLoggedIn(false);
     }
     setLoading(false)
-  }, [userReducer])
+  }, [userInfo])
 
   if (loading) {
     return <View style={{flex:1, backgroundColor:Colors.primary,justifyContent:'center'}} >
@@ -36,7 +44,7 @@ const AuthLoading = ({ userReducer }) => {
         ref={(navigatorRef) => {
           Navigator.setTopLevelNavigator(navigatorRef);
         }}>
-        {loggedIn ? <HomeStack/> : <AuthStack />}
+        {loggedIn ? <HomeStack/> : <AuthStack/>}
       </NavigationContainer>
     );
   }
@@ -44,9 +52,4 @@ const AuthLoading = ({ userReducer }) => {
 
 };
 
-const mapStateToProps = state => {
-  const { userReducer } = state;
-  return { userReducer };
-};
-
-export default connect(mapStateToProps)(AuthLoading);
+export default AuthLoading;

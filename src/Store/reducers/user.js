@@ -1,9 +1,23 @@
 import {SIGN_IN,SIGN_UP,SIGN_OUT} from '../types/user';
+import AsyncStorage from "@react-native-community/async-storage";
+import persistReducer from 'redux-persist/es/persistReducer';
+import {logToConsole} from "../../Configs/ReactotronConfig";
+import useUserState, {UserModel} from "../../CustomHooks/useUserState";
 
-export const userReducer = (state = null, action) => {
-    switch(action.type) {
+const initialState= {
+    userInfo:{}
+}
+export const userReducer = (state = initialState, action) => {
+    const {type, payload} = action || {};
+    // const {userReducer} = payload;
+    // const {userInfo} = userReducer
+    // logToConsole({userReducer: userInfo})
+    switch (type) {
         case SIGN_IN:
-            return action.payload;
+            return {
+                ...state,
+                userInfo: payload,
+            };
         case SIGN_OUT:
             return null;
 
@@ -11,3 +25,4 @@ export const userReducer = (state = null, action) => {
             return state
         }
 }
+

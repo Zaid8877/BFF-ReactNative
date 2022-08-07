@@ -12,12 +12,15 @@ import {logToConsole} from "../../Configs/ReactotronConfig";
 import {showToast} from "../../Utils/ToastUtils";
 import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
+import { useDispatch } from 'react-redux'
+import {signIn} from '../../Store/actions/user'
 
 const SignUp = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isSignupButtonDisabled, setIsSignupButtonDisabled] = useState(false);
+    const dispatch = useDispatch()
 
 
     const {
@@ -34,13 +37,6 @@ const SignUp = () => {
     }, [name, email, password])
 
 
-    const {
-        onCallApi: onCallLoginApi,
-        loading: loginLoading,
-    } = useApiWrapper({
-        type: REQUEST_METHOD.POST,
-        endPoint: ApiService.auth.login,
-    });
     const validateFields = () => {
         if (!isFieldEmpty(name) && isNameFieldValid(name) && !isFieldEmpty(email) && isEmailValid(email) && !isFieldEmpty(password) && isPasswordValid(password))
             setIsSignupButtonDisabled(false)
@@ -58,12 +54,14 @@ const SignUp = () => {
         const loginResponse = await onCallRegisterApi(params);
         const {ok = false, status, data = {}} = loginResponse || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
+            logToConsole({data})
             if(data.error){
                 showToast(data.message)
             }
             else{
-                Alert.alert(APP_STRINGS.APP_NAME, data.message,[{text:APP_STRINGS.OK, style:"default", onPress: () => {Navigator.goBack()},
-                }],{cancelable:false})
+                dispatch(signIn(data))
+                // Alert.alert(APP_STRINGS.APP_NAME, data.message,[{text:APP_STRINGS.OK, style:"default", onPress: () => {Navigator.goBack()},
+                // }],{cancelable:false})
                 // showToast(data.message)
                 // Navigator.navigate('CreateProfile')
             }
