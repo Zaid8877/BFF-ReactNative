@@ -11,6 +11,8 @@ import {API_STATUS} from "../../Constants";
 import {showToast} from "../../Utils/ToastUtils";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import {logToConsole} from "../../Configs/ReactotronConfig";
+import Navigator from "../../Utils/Navigator";
+import {useIsFocused} from "@react-navigation/native";
 
 const data = [
     {
@@ -27,9 +29,16 @@ export default function Channels() {
     const [isDataLoaded, setDataLoaded] = useState(false)
     const [channels, setChannels] = useState([])
     const pageSize = 10
+    const isFocused = useIsFocused();
+
     useEffect(() => {
-        getChannels().then()
+        getChannels(false).then()
     }, [])
+    useEffect(() => {
+        if (isFocused) {
+            getChannels(true).then()
+        }
+    }, [isFocused]);
     const {
         onCallApi: onCallGetChannelsApi,
         loading: onLoadingChannels,
@@ -38,7 +47,7 @@ export default function Channels() {
         endPoint: ApiService.channels.getAllMyChannels
     });
 
-    const getChannels = async () => {
+    const getChannels = async (replaceData) => {
         Keyboard.dismiss();
 
         const loginResponse = await onCallGetChannelsApi({}, '?page_no=' + page + '&page_size=' + pageSize);
@@ -48,7 +57,7 @@ export default function Channels() {
             if (data.error) {
                 showToast(data.message)
             } else {
-                setChannels(channels.length === 0 ? data.data : channels.concat(data.data))
+                setChannels(replaceData ? data.data : channels.length === 0 ? data.data : channels.concat(data.data))
                 setTotalRecords(data.totalRecords)
             }
         } else {
@@ -61,21 +70,22 @@ export default function Channels() {
 // logToConsole({length:channels.length})
     return (
         <RootView statusBar={Colors.lightGrey} showCircle isLoading={onLoadingChannels}>
-            <Header secondary title="Channels" showAddIcon={false}/>
-                <FlatList
-                    style={{paddingTop: Metrics.defaultMargin}}
-                    data={channels}
-                    keyExtractor={item => item.id}
-                    ListEmptyComponent={isDataLoaded?<NoRecordFound message={"No Channels Found"}/>:null}
-                    renderItem={({item}) => (
-                        <Item
-                            showIcon={true}
-                            item={item}
-                            style={{backgroundColor: Colors.lightGrey}}
-                            onPress={id => console.log(id)}
-                        />
-                    )}
-                />
+            <Header secondary title="Channels" showAddIcon={true}
+                    onPressRight={() => Navigator.navigate('CreateChannel')}/>
+            <FlatList
+                style={{paddingTop: Metrics.defaultMargin}}
+                data={channels}
+                keyExtractor={item => item.id}
+                ListEmptyComponent={isDataLoaded ? <NoRecordFound message={"No Channels Found"}/> : null}
+                renderItem={({item}) => (
+                    <Item
+                        showIcon={true}
+                        item={item}
+                        style={{backgroundColor: Colors.lightGrey}}
+                        onPress={id => console.log(id)}
+                    />
+                )}
+            />
         </RootView>
     );
 }

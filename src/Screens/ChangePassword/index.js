@@ -9,49 +9,61 @@ import {useState} from 'react'
 import Navigator from '../../Utils/Navigator'
 import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
-import {API_STATUS, APP_STRINGS, isEmailValid, isFieldEmpty, isNameFieldValid, isPasswordValid} from "../../Constants";
+import {
+    API_STATUS,
+    APP_STRINGS,
+    isConfirmPasswordCorrect,
+    isEmailValid,
+    isFieldEmpty,
+    isNameFieldValid,
+    isPasswordValid
+} from "../../Constants";
 import {showToast} from "../../Utils/ToastUtils";
 
 const ForgotPassword = ({route}) => {
-    const {email}=route.params
-    const [password,setPassword]=useState('')
-    const [confirmPassword, setConfirmPassword]=useState('')
+    const {email} = route.params
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
 
-    const [isChangePasswordVisibile, setIsChangeaPasswordVisibile] = useState(false);
+    const [isChangedPasswordDisabled, setIsChangedPasswordDisabled] = useState(false);
 
     const {
         onCallApi: onCallChangePasswordApi,
         loading: changePasswordPasswordLoading,
     } = useApiWrapper({
         type: REQUEST_METHOD.POST,
-        endPoint: ApiService.auth.updatePasswordByOTP,
+        endPoint: ApiService.auth.updatePasswordByEmail,
     });
 
     useEffect(() => {
         validateFields()
-    }, [email])
+    }, [password,confirmPassword])
 
 
     const validateFields = () => {
         if (isPasswordValid(password) && isConfirmPasswordCorrect(password, confirmPassword))
-            setIsForgotPasswordButtonVisible(false)
+            setIsChangedPasswordDisabled(false)
         else {
-            setIsForgotPasswordButtonVisible(true)
+            setIsChangedPasswordDisabled(true)
         }
     }
-    const forgotPassword = async () => {
+    const onChangePassword = async () => {
         Keyboard.dismiss();
         const params = {
             email: email.trim().toLowerCase(),
+            password: password
         };
         const changePasswordResponse = await onCallChangePasswordApi(params);
         const {ok = false, status, data = {}} = changePasswordResponse || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
-            if(data.error){
+            if (data.error) {
                 showToast(data.message)
-            }
-            else{
-                Navigator.navigate('SignIn')
+            } else {
+                Alert.alert('Successful!', 'Password Changed Successfully', [{
+                    text: "Okay", onPress: () => {
+                        Navigator.navigate('SignIn')
+                    }
+                }])
             }
         } else {
             const {message = ''} = data || {};
@@ -60,26 +72,26 @@ const ForgotPassword = ({route}) => {
     }
 
     return (
-        <RootView style={styles.container} isLoading={forgotPasswordLoading}>
+        <RootView style={styles.container} isLoading={changePasswordPasswordLoading}>
             <Heading text="Forgot Password"/>
-            <Text style={styles.text}>Please type your email or phone number below</Text>
+            <Text style={styles.text}>Enter new password.</Text>
             <Input
                 value={password}
                 onChangeText={(val) => setPassword(val)}
-                placeholder='Password'
+                placeholder='New Password'
                 secureTextEntry
                 icon='lock-outline'
             />
             <Input
                 value={confirmPassword}
                 onChangeText={(val) => setConfirmPassword(val)}
-                placeholder='Password'
+                placeholder='Confirm Password'
                 secureTextEntry
                 icon='lock-outline'
             />
-            <Button text='Send' disabled={isChangePasswordVisibile} onPress={() =>
+            <Button text='Send' disabled={isChangedPasswordDisabled} onPress={() =>
                 // Navigator.navigate('Verification')
-                forgotPassword()
+                onChangePassword()
             }
             />
         </RootView>

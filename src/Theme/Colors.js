@@ -12,6 +12,7 @@ const colors = {
   placeholder: '#808080',
   error: '#FF355A',
   white: '#FFFFFF',
+  black: '#000000',
   transparent: '#00000000',
   blue: '#007AFF',
   lightGrey: '#F0F0F0',

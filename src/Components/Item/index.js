@@ -4,8 +4,8 @@ import Images from '../../Utils/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Colors, Metrics} from '../../Theme';
 
-export default function Item({item, onPress,selected,style,showIcon}) {
-  const {title, text, image, id} = item;
+export default function Item({item, onPress=()=>{},selected,style,showIcon}) {
+  const {channel_name, participants, image, id} = item;
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={() => onPress(id)}>
       <View
@@ -29,14 +29,14 @@ export default function Item({item, onPress,selected,style,showIcon}) {
               styles.heading,
               {color: selected ? 'white' : Colors.textDark},
             ]}>
-            {title}
+            {channel_name}
           </Text>
           <Text
             style={[
               styles.text,
               {color: selected ? 'white' : Colors.textDark},
             ]}>
-            {text}
+            {participants}
           </Text>
         </View>
       </View>

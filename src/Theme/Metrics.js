@@ -8,7 +8,7 @@ const screenHeight = width < height ? height : width;
 
 const ratio = (iosSize: number, androidSize: ?number, doScale = false) =>
   Platform.select({
-    ios: doScale ? scaleVertical(iosSize) : iosSize, 
+    ios: doScale ? scaleVertical(iosSize) : iosSize,
     android: doScale
       ? scaleVertical(androidSize || iosSize)
       : androidSize || iosSize
@@ -22,6 +22,7 @@ export default Metrics = {
   smallMargin: screenWidth * 0.04,
   xsmallMargin: screenWidth * 0.02,
   largeMargin: screenWidth * 0.08,
+  bottomSheetTopMargin:screenHeight*0.08,
   xsmallFont: scaleFont(9),
   smallFont: scaleFont(11),
   defaultFont: scaleFont(13),

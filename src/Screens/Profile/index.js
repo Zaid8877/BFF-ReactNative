@@ -14,8 +14,10 @@ import {Colors, Metrics} from '../../Theme';
 import Input from '../../Components/Input';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Navigator from '../../Utils/Navigator';
+import useUserState from "../../CustomHooks/useUserState";
 
 export default function Profile() {
+  const userInfo=useUserState()
   const renderItem = (text, onPress = () => {}, icon = 'pencil-outline') => {
     return  (
       <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
@@ -29,7 +31,7 @@ export default function Profile() {
 
   return (
     <RootView>
-      <Header title="Ralph Edwards" />
+      <Header title={userInfo.name} />
       <ScrollView style={{flex: 1}}>
         <Image source={Images.person} style={styles.image} />
         <Input

@@ -4,7 +4,7 @@ const auth = {
   forgotPassword:'/auth/forgot_password',
   verifyOTP:'/auth/verify_otp',
   updatePasswordByOTP:'/auth/update_passwoed_by_otp',
-  updatePasswordByEmail:'/auth/update_passwoed_by_email',
+  updatePasswordByEmail:'/auth/update_pasword_by_email',
 };
 
 const user= {

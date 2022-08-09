@@ -74,7 +74,7 @@ export default function CustomDrawer(props) {
   const userInfo=useUserState()
   const name= userInfo? userInfo.name:''
   const user_name= userInfo? userInfo.user_name:''
-  const firstLetter= userInfo? userInfo.name.charAt(0).toUpperCase():''
+  const firstLetter= (userInfo && userInfo.name)? userInfo.name.charAt(0).toUpperCase():''
   return (
     <View style={{
       flex: 1,

@@ -27,6 +27,9 @@ export const isFieldEmpty=(field)=>{
 export const isPasswordValid=(field)=>{
   return (field && field.length >5)
 }
+export const isConfirmPasswordCorrect=(password, confirmPassword)=>{
+  return (password === confirmPassword)
+}
 export const isNameFieldValid=(field)=>{
   return (field && field.length >3)
 }
