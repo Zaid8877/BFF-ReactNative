@@ -129,6 +129,11 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -224,13 +229,13 @@ android {
         }
     }
     signingConfigs {
-             release {
-            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
-                storeFile file(MYAPP_UPLOAD_STORE_FILE)
-                storePassword MYAPP_UPLOAD_STORE_PASSWORD
-                keyAlias MYAPP_UPLOAD_KEY_ALIAS
-                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
-            }
+       release {
+           release {
+             keyAlias keystoreProperties["keyAlias"]
+             keyPassword keystoreProperties["keyPassword"]
+             storeFile file(keystoreProperties["storeFile"])
+             storePassword keystoreProperties["storePassword"]
+           }
         }
         debug {
             storeFile file('debug.keystore')

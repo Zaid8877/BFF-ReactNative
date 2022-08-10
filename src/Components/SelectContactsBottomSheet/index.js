@@ -53,7 +53,7 @@ const SelectedContactsBottomSheet = ({isVisible, selectedContacts, onBackKeyPres
     const getContacts = async () => {
         logToConsole("getting contacts")
 
-        const loginResponse = await onCallGetContactsApi({}, '?page_no=' + 1 + '&page_size=' + 10);
+        const loginResponse = await onCallGetContactsApi();
         const {ok = false, status, data = {}} = loginResponse || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
             setIsDataLoading(true)
