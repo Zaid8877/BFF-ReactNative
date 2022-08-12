@@ -1,4 +1,4 @@
-import {View, Text, FlatList, Keyboard} from 'react-native';
+import {View, Text, FlatList, Keyboard, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import RootView from '../../Components/RootView';
 import Header from '../../Components/Header';
@@ -13,6 +13,7 @@ import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import {logToConsole} from "../../Configs/ReactotronConfig";
 import Navigator from "../../Utils/Navigator";
 import {useIsFocused} from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const data = [
     {
@@ -23,7 +24,8 @@ const data = [
     },
 ];
 
-export default function Channels() {
+const Channels=({route}) =>{
+    const {isFromMenu} = route.params
     const [page, setPage] = useState(1)
     const [totalRecords, setTotalRecords] = useState(0)
     const [isDataLoaded, setDataLoaded] = useState(false)
@@ -65,13 +67,19 @@ export default function Channels() {
             showToast(message)
         }
     }
-// logToConsole({isDataLoaded})
-// logToConsole({channels})
-// logToConsole({length:channels.length})
+    const openCreateChannel = ()=>{
+        Navigator.navigate('CreateChannel')
+    }
     return (
         <RootView statusBar={Colors.lightGrey} showCircle isLoading={onLoadingChannels}>
-            <Header secondary title="Channels" showAddIcon={true}
-                    onPressRight={() => Navigator.navigate('CreateChannel')}/>
+            <Header secondary={true} title="Channels" showAddIcon={true} leftIcon= {isFromMenu?'menu' : 'chevron-left'}
+                    onPressLeft={()=>{
+                        if(isFromMenu)
+                            Navigator.openDrawer()
+                        else
+                            Navigator.goBack()
+                    }}
+                    onPressRight={() => openCreateChannel()}/>
             <FlatList
                 style={{paddingTop: Metrics.defaultMargin}}
                 data={channels}
@@ -82,10 +90,23 @@ export default function Channels() {
                         showIcon={true}
                         item={item}
                         style={{backgroundColor: Colors.lightGrey}}
-                        onPress={id => console.log(id)}
+                        onPress={(id)=>{Navigator.navigate("CallScreen", {channel:item})}}
                     />
                 )}
             />
         </RootView>
     );
 }
+
+
+const styles = StyleSheet.create({
+    iconViewGenerateCall: {
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: Colors.primary,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+export default Channels

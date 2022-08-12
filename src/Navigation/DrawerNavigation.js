@@ -93,6 +93,7 @@ function DrawerNavigator() {
       <Drawer.Screen
         name="Channels"
         component={Channels}
+        initialParams={{isFromMenu:true}}
         options={{
           drawerIcon: ({focused, size}) => (
             <FontAwesome

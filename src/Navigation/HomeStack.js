@@ -27,6 +27,8 @@ import useUserState from "../CustomHooks/useUserState";
 import CreateProfile from "../Screens/CreateProfile";
 import {logToConsole} from "../Configs/ReactotronConfig";
 import CreateChannel from "../Screens/CreateChannel";
+import Channels from "../Screens/Channels";
+import CallScreen from "../Screens/CallScreen";
 
 const Stack = createStackNavigator();
 
@@ -59,6 +61,8 @@ const HomeStack = () => {
             <Stack.Screen name="Connect" component={Connect}/>
             <Stack.Screen name="QrScanner" component={QRScanner}/>
             <Stack.Screen name="CreateChannel" component={CreateChannel}/>
+            <Stack.Screen name="Channels" component={Channels}/>
+            <Stack.Screen name="CallScreen" component={CallScreen}/>
 
 
         </Stack.Navigator>

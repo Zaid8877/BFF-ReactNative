@@ -104,9 +104,8 @@ export default function CreateChannel() {
                 <Input
                     value={channelName}
                     onChangeText={(val) => setChannelName(val)}
-                    placeholder='Email'
-                    keyboardType='email-address'
-                    icon='email-outline'
+                    placeholder='Channel Name'
+                    keyboardType='default'
                 />
 
                 <TouchableOpacity

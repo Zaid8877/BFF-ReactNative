@@ -15,7 +15,7 @@ export const onBoardingReducer = (state = initialState, action) => {
                 ...state,
                 isOnBoadring: payload,
             };
-            default:
+        default:
             return state
     }
 }
