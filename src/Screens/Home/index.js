@@ -27,18 +27,18 @@ export default function Home() {
     var recentChannelList = useRecentChannelState()
     logToConsole(recentChannelList)
     const [loadingRecentChannelList, setLoadingRecentChannelList] = useState(false)
-    const {
-        channelName,
-        isMute,
-        isSpeakerEnable,
-        joinSucceed,
-        peerIds,
-        setChannelName,
-        joinChannel,
-        leaveChannel,
-        toggleIsMute,
-        toggleIsSpeakerEnable,
-    } = useInitializeAgora();
+    // const {
+    //     channelName,
+    //     isMute,
+    //     isSpeakerEnable,
+    //     joinSucceed,
+    //     peerIds,
+    //     setChannelName,
+    //     joinChannel,
+    //     leaveChannel,
+    //     toggleIsMute,
+    //     toggleIsSpeakerEnable,
+    // } = useInitializeAgora();
 
     const renderItem = ({item, index}) => {
         return <Item

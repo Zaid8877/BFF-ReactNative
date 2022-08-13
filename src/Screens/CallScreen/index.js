@@ -37,8 +37,8 @@ export default function CallScreen({route}) {
         leaveChannel,
         toggleIsMute,
         toggleIsSpeakerEnable,
-    } = useInitializeAgora();
-    useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
+    } = useInitializeAgora(/*channel.channel_name.replace(" ","-")*/);
+    // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
 
 
     return (
