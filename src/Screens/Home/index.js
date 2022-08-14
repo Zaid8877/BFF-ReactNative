@@ -72,16 +72,16 @@ export default function Home() {
             </View>
 
             <View style={[styles.item]}>
-                <View style={styles.imageView}>
-                    <Image source={Images.soundWaves} style={styles.image}/>
+                {/*<View style={styles.imageView}>*/}
+                {/*    <Image source={Images.soundWaves} style={styles.image}/>*/}
 
-                    <View style={styles.iconView}>
-                        <Icon name="check" color="white"/>
-                    </View>
-                </View>
+                {/*    <View style={styles.iconView}>*/}
+                {/*        <Icon name="check" color="white"/>*/}
+                {/*    </View>*/}
+                {/*</View>*/}
                 <View style={styles.textView}>
-                    <Text style={[styles.heading]}>{'Echo'}</Text>
-                    <Text style={[styles.text]}>{'Talk to me to test the audio'}</Text>
+                    <Text style={[styles.heading]}>{'Recent Channels'}</Text>
+                    {/*<Text style={[styles.text]}>{'Talk to me to test the audio'}</Text>*/}
                 </View>
             </View>
 

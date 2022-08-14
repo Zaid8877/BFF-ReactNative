@@ -80,7 +80,7 @@ export default function CreateChannel() {
     const getContactIds = (contacts=participants)=>{
         let ids = ''
         contacts.map(item=>{
-            ids+=item.name+",";
+            ids+=item.id+",";
         })
         ids = ids.substring(0, ids.length-1)
         return ids;

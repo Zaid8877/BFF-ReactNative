@@ -14,6 +14,7 @@ import useUserState from "../../CustomHooks/useUserState";
 import {API_STATUS, isEmailValid, isFieldEmpty, isNameFieldValid, isPasswordValid} from "../../Constants";
 import {logToConsole} from "../../Configs/ReactotronConfig";
 import {showToast} from "../../Utils/ToastUtils";
+import Navigator from "../../Utils/Navigator";
 
 export default function CreateProfile() {
     const dispatch = useDispatch()
@@ -60,7 +61,7 @@ export default function CreateProfile() {
                 showToast(data.message)
             }
             else{
-                dispatch(signIn({...userInfo,name:name,cell_no:phoneNumber }))
+                dispatch(signIn({...userInfo,user_name:name,cell_no:phoneNumber }))
                 // Alert.alert(APP_STRINGS.APP_NAME, data.message,[{text:APP_STRINGS.OK, style:"default", onPress: () => {Navigator.goBack()},
                 // }],{cancelable:false})
                 // showToast(data.message)
@@ -74,7 +75,9 @@ export default function CreateProfile() {
 
     return (
         <RootView lightCircle showCircle isLoading={updateProfileLoading}>
-            <Header title='Profile' showRight showLeft={false}/>
+            <Header title='Profile' showRight showLeft={false} onPressRight={()=>{
+                dispatch(signIn({...userInfo}))
+            }}/>
             <View style={styles.container}>
                 <Image source={Images.person} style={styles.image}/>
                 <Input placeholder='Display Name' value={name} onChangeText={(val) => setName(val)}/>

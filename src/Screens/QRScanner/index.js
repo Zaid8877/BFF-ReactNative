@@ -29,9 +29,9 @@ export default function QRScanner() {
     });
 
     const addContact = async (id) => {
-        Keyboard.dismiss();
+        Keyboard.dismiss();logToConsole({id})
         const params = {
-            user_id:id.trim(),
+            user_id:id,
         };
         const loginResponse = await onCallAddContactAPI(params);
         const {ok = false, status, data = {}} = loginResponse || {};

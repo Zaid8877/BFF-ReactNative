@@ -22,10 +22,16 @@ import Item from "../../Components/Item";
 import {logToConsole} from "../../Configs/ReactotronConfig";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import Header from "../../Components/Header";
+import {useDispatch} from "react-redux";
+import {setRecentChannel} from '../../Store/actions/RecentChannelActions'
+import navigation from "../../Navigation";
+
 
 export default function CallScreen({route}) {
+    const recentCalls = useRecentChannelState();
     const {channel} = route.params
     useRequestAudioHook();
+    const dispatch= useDispatch()
     const {
         channelName,
         isMute,
@@ -40,13 +46,44 @@ export default function CallScreen({route}) {
     } = useInitializeAgora(/*channel.channel_name.replace(" ","-")*/);
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
 
+    const onJoinChannel = ()=>{
+          joinChannel().then(item=>{
+            logToConsole({item})
+        })
+    }
+    const onLeaveChannel = ()=>{
+        leaveChannel()
+
+        if (recentCalls.size === 0) {
+            recentCalls.push(channel)
+        }
+        else{
+            var findIndex = -1
+            recentCalls.map((itemChannel,index)=>{
+                if(itemChannel.id === channel.id){
+                    findIndex = index
+                }
+            })
+            if(findIndex!=-1){
+                recentCalls.slice(findIndex,1)
+                recentCalls.slice(0,0,channel)
+            }
+            else{
+                recentCalls.push(channel)
+            }
+        }
+        dispatch(setRecentChannel(recentCalls))
+        Navigator.goBack()
+
+    }
 
     return (
         <RootView statusBar={Colors.primary}>
             <StatusBar backgroundColor={Colors.primary} barStyle='light-content'/>
             <View style={styles.header}>
-
                 <Icon name="chevron-left" color={Colors.white} size={32} onPress={() => Navigator.goBack()}/>
+                        <Text style={[styles.heading,{flex:1, textAlign:'center'}]}>{channel.channel_name}</Text>
+
             </View>
 
             {/*<View style={[styles.item]}>*/}
@@ -86,7 +123,7 @@ export default function CallScreen({route}) {
                     backgroundColor: joinSucceed ? 'red' : 'pink',
                     alignSelf: 'center',
                     borderRadius: 120
-                }} onPress={joinSucceed ? leaveChannel : joinChannel}>
+                }} onPress={joinSucceed ? onLeaveChannel: onJoinChannel}>
                     <Text style={{
                         alignSelf: 'center',
                         marginTop: 60,
