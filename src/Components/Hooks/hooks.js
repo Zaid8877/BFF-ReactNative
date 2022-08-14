@@ -3,6 +3,8 @@ import {Platform} from 'react-native';
 import RtcEngine from 'react-native-agora';
 import {requestAudioPermission} from '../Permissions/permissions';
 import {logToConsole} from "../../Configs/ReactotronConfig";
+import {agoraAppCertificate, agoraAppId,agoraAppToken} from "../../Constants";
+// import Agora from  "agora-access-token";
 
 export const useRequestAudioHook = () => {
     useEffect(() => {
@@ -16,13 +18,27 @@ export const useRequestAudioHook = () => {
     }, []);
 };
 
-export const useInitializeAgora = (channel_name = 'my-channel') => {
+// const generateToken = (channel_name, isOpenedFromNotification) => {
+//     const appID = agoraAppId;
+//     const appCertificate = agoraAppCertificate;
+//     const expirationTimeInSeconds = 3600;
+//     const uid = Math.floor(Math.random() * 100000);
+//     const role = isOpenedFromNotification ? Agora.RtcRole.SUBSCRIBER : Agora.RtcRole.PUBLISHER;
+//     const channel = channel_name;
+//     const currentTimestamp = Math.floor(Date.now() / 1000);
+//     const expirationTimestamp = currentTimestamp + expirationTimeInSeconds;
+//
+//     const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
+//     logToConsole({token})
+//     return token
+// }
+export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNotification = false) => {
     logToConsole({channel_name})
     // Replace yourAppId with the App ID of your Agora project.
-    const appId = 'ded6b8286e3f4641a901f96e5c685f65';
+    const appId = agoraAppId;
     // const appId = 'ed3824ee1946496faddd7abde731c1c2';
-    const token = '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
-        // '006ed3824ee1946496faddd7abde731c1c2IADawTPNWer1xA5PeSnIDlYUmh0gnu35sjEiAJxf2/wp0Ya0dcYAAAAAEAArT8zLxSS8YgEAAQDEJLxi'
+    let token = agoraAppToken// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
+    // '006ed3824ee1946496faddd7abde731c1c2IADawTPNWer1xA5PeSnIDlYUmh0gnu35sjEiAJxf2/wp0Ya0dcYAAAAAEAArT8zLxSS8YgEAAQDEJLxi'
     // '0061af140d1d92848d4a4f315e62e37727bIAB+fGiaLhFQO3PXJPVULfFjNcwWEn6Jp0We13gBM2/eQYa0dcYAAAAAEABVr+ww+rO+XwEAAQD6s75f';
 
     const [channelName, setChannelName] = useState(channel_name);

@@ -5,7 +5,9 @@ import {logToConsole} from "../Configs/ReactotronConfig";
 //Platforms
 export const isIos = Platform.OS === 'ios';
 export const isAndroid = Platform.OS === 'android';
-
+export const agoraAppId = 'ded6b8286e3f4641a901f96e5c685f65';
+export const agoraAppCertificate='bcadf1de8eca498e9062e2d416d1e699'
+export const agoraAppToken='006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
 export const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 export const PASSWORD_REGEX =
   /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
