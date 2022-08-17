@@ -26,11 +26,14 @@ import {setRecentChannel} from '../../Store/actions/RecentChannelActions'
 import navigation from "../../Navigation";
 import Button from '../../Components/Button/index'
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
+import useUserState from "../../CustomHooks/useUserState";
+import {assertArray} from "@babel/core/lib/config/validation/option-assertions";
 
 
 export default function CallScreen({route}) {
-    const recentCalls = useRecentChannelState();
-    const {channel} = route.params
+    const userInfo=useUserState()
+    let recentCalls = useRecentChannelState();
+    const {channel,contact} = route.params
     useRequestAudioHook();
     const dispatch= useDispatch()
     const {
@@ -44,37 +47,38 @@ export default function CallScreen({route}) {
         leaveChannel,
         toggleIsMute,
         toggleIsSpeakerEnable,
-    } = useInitializeAgora(/*channel.channel_name.replace(" ","-")*/);
+    } = useInitializeAgora(/*contact?"channel_"+contact.id+"_"+userInfo.id: channel.channel_name.replace(" ","-")*/);
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
     // useEffect(()=>{onJoinChannel()},[channel])
-
+logToConsole({channel})
     const onJoinChannel = ()=>{
           joinChannel().then(item=>{
             logToConsole({item})
         })
+        const callType=contact?"contact":"channel"
+        const dataToSave = contact?contact:channel
+        dataToSave.callType=callType
+        if (recentCalls.size === 0) {
+            recentCalls.push(dataToSave)
+        }
+        else{
+            let arr = []
+            arr.push(dataToSave)
+            recentCalls.map((itemChannel,index)=>{
+                if(itemChannel.callType === callType && dataToSave.id === itemChannel.id){
+                }
+                else{
+                    arr.push(itemChannel)
+                }
+
+            })
+            recentCalls = arr
+        }
+
+        dispatch(setRecentChannel(recentCalls))
     }
     const onLeaveChannel = ()=>{
         leaveChannel()
-
-        if (recentCalls.size === 0) {
-            recentCalls.push(channel)
-        }
-        else{
-            var findIndex = -1
-            recentCalls.map((itemChannel,index)=>{
-                if(itemChannel.id === channel.id){
-                    findIndex = index
-                }
-            })
-            if(findIndex!=-1){
-                recentCalls.slice(findIndex,1)
-                recentCalls.slice(0,0,channel)
-            }
-            else{
-                recentCalls.push(channel)
-            }
-        }
-        dispatch(setRecentChannel(recentCalls))
         Navigator.goBack()
 
     }
@@ -84,7 +88,7 @@ export default function CallScreen({route}) {
             <StatusBar backgroundColor={Colors.primary} barStyle='light-content'/>
             <View style={styles.header}>
                 <Icon name="chevron-left" color={Colors.white} size={32} onPress={() => Navigator.goBack()}/>
-                        <Text style={[styles.heading,{flex:1, textAlign:'center'}]}>{channel.channel_name}</Text>
+                        <Text style={[styles.heading,{flex:1, textAlign:'center'}]}>{contact?contact.name:channel.channel_name}</Text>
 
             </View>
 
@@ -119,18 +123,27 @@ export default function CallScreen({route}) {
                         }}>{peerIds.length > 1 ? 'Connected' : 'Ringing'}</Text>
                     </View>
                 }
-                <FlatList
-                    style={{paddingTop: Metrics.defaultMargin}}
-                    data={channel.participants.split(",")}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => (
-                        <ContactsItem
-                            showIcon={false}
-                            item={item}
-                            style={{backgroundColor: Colors.lightGrey}}
-                        />
-                    )}
+                {channel && channel.participantsList.length > 0 &&
+                    <FlatList
+                        style={{paddingTop: Metrics.defaultMargin}}
+                        data={channel.participantsList}
+                        keyExtractor={item => item.id}
+                        renderItem={({item}) => (
+                            <ContactsItem
+                                showIcon={false}
+                                item={item}
+                                style={{backgroundColor: Colors.lightGrey}}
+                            />
+                        )}
+                    />
+                }
+                {contact && <View style={{flex:1}}><ContactsItem
+                    showIcon={false}
+                    item={contact}
+                    style={{backgroundColor: Colors.lightGrey}}
                 />
+                </View>
+                    }
 
                 {/* <TouchableOpacity
                     activeOpacity={0.9}

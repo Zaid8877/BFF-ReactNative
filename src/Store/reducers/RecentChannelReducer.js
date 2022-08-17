@@ -1,4 +1,4 @@
-import {RecentChannelKey} from '../types/RecentChannelTypes';
+import {RecentChannelKey,ClearRecentChannel} from '../types/RecentChannelTypes';
 import {logToConsole} from "../../Configs/ReactotronConfig";
 
 const initialState={
@@ -13,6 +13,8 @@ export const RecentChannelReducer = (state = initialState, action) => {
                 ...state,
                 RecentChannels: payload,
             };
+        case ClearRecentChannel:
+            return []
         default:
             return state
     }

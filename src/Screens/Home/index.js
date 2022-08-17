@@ -21,6 +21,7 @@ import useRecentChannelState from "../../CustomHooks/useRecentChannelState";
 import Item from "../../Components/Item";
 import {logToConsole} from "../../Configs/ReactotronConfig";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
+import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 
 export default function Home() {
     useRequestAudioHook();
@@ -41,12 +42,26 @@ export default function Home() {
     // } = useInitializeAgora();
 
     const renderItem = ({item, index}) => {
-        return <Item
-            showIcon={false}
-            item={item}
-            style={{backgroundColor: Colors.lightGrey}}
-            onPress={(id)=>{Navigator.navigate("ChannelDetail", {channel:item})}}
-        />
+        if(item.callType === "contact") {
+         return <ContactsItem
+             showIcon={false}
+             item={item}
+             style={{backgroundColor: Colors.lightGrey}}
+             onPress={(id) => {
+                 Navigator.navigate("CallScreen", {contact: item})
+             }}
+         />
+        }
+        else{
+            return <Item
+                showIcon={false}
+                item={item}
+                style={{backgroundColor: Colors.lightGrey}}
+                onPress={(id) => {
+                    Navigator.navigate("ChannelDetail", {channel: item})
+                }}
+            />
+        }
     }
 
     const createChannelView = () => {

@@ -15,7 +15,7 @@ export default function Intro() {
     const dispatch = useDispatch()
 
     const setAndDispatchToSignin =() => {
-        Navigator.z('SignIn')
+        Navigator.navigate('SignIn')
         dispatch(setOnBoardingViewed(true))
     }
 

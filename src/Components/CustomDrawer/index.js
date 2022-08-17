@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
   drawerItem: {
     flexDirection: 'row',
     paddingHorizontal: Metrics.smallMargin,
+    paddingVertical:Metrics.smallMargin,
     alignItems: 'center',
     borderRadius: 5,
     borderBottomLeftRadius: 0,

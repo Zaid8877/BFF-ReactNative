@@ -31,31 +31,37 @@ const data = [
 const ChannelDetail = ({route}) => {
     const {channel} = route.params
     const chanelHistory = useRecentChannelState().filter(item => {
-        return channel.id === item.id
+        return channel.id === item.id && item.callType!=='contact'
     })
+    const [channelDetail,setChannelDetail]=useState({})
+    const {participantsList} = channelDetail
+
     const [isDataLoaded, setDataLoaded] = useState(false)
     useEffect(() => {
-        // getChannels(false).then()
+        getChannels().then()
     }, [])
 
     const {
-        onCallApi: onCallGetChannelsApi,
+        onCallApi: onCallGetChannelDetailApi,
         loading: onLoadingChannels,
     } = useApiWrapper({
         type: REQUEST_METHOD.GET,
-        endPoint: ApiService.channels.getAllMyChannels
+        endPoint: ApiService.channels.getChannelDetail
     });
 
-    const getChannels = async (replaceData) => {
+    const getChannels = async () => {
         Keyboard.dismiss();
 
-        const loginResponse = await onCallGetChannelsApi({}, '?page_no=' + page + '&page_size=' + pageSize);
+        const loginResponse = await onCallGetChannelDetailApi({}, '/'+channel.id);
         const {ok = false, status, data = {}} = loginResponse || {};
         setDataLoaded(true)
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
             if (data.error) {
                 showToast(data.message)
             } else {
+                let channelDetail=data.channel
+                channelDetail.participantsList = data.participants
+                setChannelDetail(channelDetail)
                 // setChannels(replaceData ? data.data : channels.length === 0 ? data.data : channels.concat(data.data))
                 // setTotalRecords(data.totalRecords)
             }
@@ -75,55 +81,58 @@ const ChannelDetail = ({route}) => {
         <RootView statusBar={Colors.lightGrey} isLoading={onLoadingChannels}>
 
             <Header secondary title='Channel Detail'  showAddIcon={true} addIconName={'phone'} onPressRight={()=>{
-                Navigator.navigate("CallScreen",{channel:channel})
+                Navigator.navigate("CallScreen",{channel:channelDetail})
             }} leftIcon='chevron-left'
                     onPressLeft={() => Navigator.goBack()}/>
-            <View style={{flexDirection: 'row', marginTop:10,}}>
-                <TabButton containerStyle={{flex:1, height: 50}} name='Participants' isSelected={!showCallHistory} onItemPress={() => {
-                    setShowCallHistory(false)
-                }}/>
-                <TabButton containerStyle={{flex:1,height: 50}} name='Call History' isSelected={showCallHistory} onItemPress={() => {
-                    setShowCallHistory(true)
-                }}/>
 
-            </View>
+            {isDataLoaded && <>
+                <View style={{flexDirection: 'row', marginTop: 10,}}>
+                    <TabButton containerStyle={{flex: 1, height: 50}} name='Participants' isSelected={!showCallHistory}
+                               onItemPress={() => {
+                                   setShowCallHistory(false)
+                               }}/>
+                    <TabButton containerStyle={{flex: 1, height: 50}} name='Call History' isSelected={showCallHistory}
+                               onItemPress={() => {
+                                   setShowCallHistory(true)
+                               }}/>
 
-            <View style={{margin: Metrics.defaultMargin, flex:1}}>
-
-                {!showCallHistory &&
-                    <FlatList
-                        style={{paddingTop: Metrics.defaultMargin}}
-                        data={channel.participants.split(",")}
-                        keyExtractor={item => item.id}
-                        ListEmptyComponent={isDataLoaded ? <NoRecordFound message={"No Participant Found"}/> : null}
-                        renderItem={({item}) => (
-                            <ContactsItem
-                                showIcon={false}
-                                item={item}
-                                style={{backgroundColor: Colors.lightGrey}}
-                                onPress={(id) => {
-                                    Navigator.navigate("UserProfile", {user: item})
-                                }}
-                            />
-                        )}
-                    />
-                }
-                {showCallHistory &&
-                    <FlatList
-                        style={{paddingTop: Metrics.defaultMargin}}
-                        data={chanelHistory}
-                        keyExtractor={item => item.id}
-                        ListEmptyComponent={isDataLoaded ? <NoRecordFound message={"No Channels Found"}/> : null}
-                        renderItem={({item}) => (
-                            <Item
-                                showIcon={false}
-                                item={item}
-                                style={{backgroundColor: Colors.lightGrey}}
-                            />
-                        )}
-                    />
-                }
-            </View>
+                </View>
+                <View style={{margin: Metrics.defaultMargin, flex: 1}}>
+                    {!showCallHistory &&
+                        <FlatList
+                            style={{paddingTop: Metrics.defaultMargin, flex:1}}
+                            data={participantsList}
+                            keyExtractor={item => item.id}
+                            ListEmptyComponent={isDataLoaded ? <NoRecordFound message={"No Participant Found"}/> : null}
+                            renderItem={({item}) => (
+                                <ContactsItem
+                                    showIcon={false}
+                                    item={item}
+                                    onPress={(id) => {
+                                        Navigator.navigate("UserProfile", {userId: item.id})
+                                    }}
+                                />
+                            )}
+                        />
+                    }
+                    {showCallHistory &&
+                        <FlatList
+                            style={{paddingTop: Metrics.defaultMargin, flex:1}}
+                            data={chanelHistory}
+                            keyExtractor={item => item.id}
+                            ListEmptyComponent={isDataLoaded ? <NoRecordFound message={"No Channels Found"}/> : null}
+                            renderItem={({item}) => (
+                                <Item
+                                    showIcon={false}
+                                    item={item}
+                                    style={{backgroundColor: Colors.lightGrey}}
+                                />
+                            )}
+                        />
+                    }
+                </View>
+            </>
+            }
         </RootView>
     );
 }

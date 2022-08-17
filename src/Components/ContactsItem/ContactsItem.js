@@ -5,16 +5,16 @@ import colors from "../../Theme/Colors";
 import {Colors, Metrics} from "../../Theme";
 import SelectedContactsBottomSheet from "../SelectContactsBottomSheet";
 import {logToConsole} from "../../Configs/ReactotronConfig";
+import ImageComponentLoader from "../ImageComponentLoader";
 
 const ContactsItem = ({item, isSelected, onPress})=>{
-    const {name, email, image} = item;
-    logToConsole(image)
+    const {name, email, profile_pic:image} = item;
+    logToConsole(item)
 
     return (<TouchableOpacity activeOpacity={0.9} onPress={onPress}>
         <View style={[styles.item,{alignItems: 'center',  alignSelf:'center', justifyContents:'center'}]}>
             <View style={[styles.imageView, !image? {justifyContent: 'center'}: {padding: 12}]}>
-                {image && <Image source={image} style={styles.image} />}
-
+                {image && <ImageComponentLoader source={image} style={styles.image} />}
                 {!image && <Text style={{ textAlign: 'center', color: Colors.black, fontSize: 36, fontWeight: 'bold' }}>{name && name.charAt(0).toUpperCase()}</Text>
                 }
 
@@ -37,11 +37,14 @@ const styles = StyleSheet.create({
     mainContainer:{flex:1},
     item: {
         backgroundColor: colors.secondary,
+        borderRadius: 20,
         alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
         padding: Metrics.defaultMargin,
         marginBottom: Metrics.defaultMargin,
+        height: parseInt(Metrics.screenHeight * 0.12),
+        width: parseInt(Metrics.screenWidth * 0.9),
         overflow: 'hidden',
     },
     imageView: {

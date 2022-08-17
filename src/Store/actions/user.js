@@ -1,5 +1,5 @@
 import {SIGN_IN,SIGN_UP,SIGN_OUT} from '../types/user';
-import {setRecentChannel} from "./RecentChannelActions";
+import {setClearRecentChannel, setRecentChannel} from "./RecentChannelActions";
 
 export const signIn = payload=>dispatch=>{
     dispatch({
@@ -9,8 +9,12 @@ export const signIn = payload=>dispatch=>{
 }
 
 export const signOut = ()=>dispatch=>{
-    dispatch(setRecentChannel,[])
-    dispatch({
-        type:SIGN_OUT,
-    })
+    dispatch(setClearRecentChannel())
+    setTimeout(()=>{
+        dispatch({
+            type:SIGN_OUT,
+        })
+    },400)
+
+
 }

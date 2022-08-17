@@ -17,5 +17,6 @@ export default {
   logo2:require('../../assets/images/logo2.png'),
   bff:require('../../assets/images/bff.png'),
   qr:require('../../assets/images/qr.png'),
-  leftArrow:require('../../assets/images/leftArrow.png')
+  leftArrow:require('../../assets/images/leftArrow.png'),
+  placeholder:require('../../assets/images/placeholder-cover.png'),
 }

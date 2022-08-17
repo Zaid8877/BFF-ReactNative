@@ -537,7 +537,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6B73TN8L6S;
+				DEVELOPMENT_TEAM = PRWX2GTM9F;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = BFF/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -549,9 +549,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bff.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.app.bff;
 				PRODUCT_NAME = BFF;
-				PROVISIONING_PROFILE_SPECIFIER = "Buch Devvv";
+				PROVISIONING_PROFILE_SPECIFIER = "Bff stagging profile";
 				SWIFT_OBJC_BRIDGING_HEADER = "BFF-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -567,7 +567,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6B73TN8L6S;
+				DEVELOPMENT_TEAM = PRWX2GTM9F;
 				INFOPLIST_FILE = BFF/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -578,9 +578,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.app.bff;
 				PRODUCT_NAME = BFF;
-				PROVISIONING_PROFILE_SPECIFIER = "Buch Devvv";
+				PROVISIONING_PROFILE_SPECIFIER = "Bff stagging profile";
 				SWIFT_OBJC_BRIDGING_HEADER = "BFF-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

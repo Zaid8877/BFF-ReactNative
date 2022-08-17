@@ -30,6 +30,7 @@ import CreateChannel from "../Screens/CreateChannel";
 import Channels from "../Screens/Channels";
 import CallScreen from "../Screens/CallScreen";
 import ChannelDetail from "../Screens/ChannelDetail";
+import UserProfile from "../Screens/UserProfile";
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,7 @@ const HomeStack = () => {
             <Stack.Screen name="Channels" component={Channels}/>
             <Stack.Screen name="ChannelDetail" component={ChannelDetail}/>
             <Stack.Screen name="CallScreen" component={CallScreen}/>
+            <Stack.Screen name="UserProfile" component={UserProfile}/>
 
 
         </Stack.Navigator>

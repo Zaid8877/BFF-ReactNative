@@ -20,6 +20,7 @@ const contact= {
 }
 const channels={
   getAllMyChannels:'/channel/get_my_all_channels',//?page_no=1&page_size=10
+  getChannelDetail:'/channel/get_by_id',//?page_no=1&page_size=10
   create:'/channel/create',
   update:'/channel/update',
   delete:'channel/delete',///{id}
