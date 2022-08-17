@@ -8,7 +8,9 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "release": "cd android && ./gradlew assembleRelease && cd .."
+    "release": "cd android && ./gradlew assembleRelease && cd ..",
+    "8": "npx react-native run-ios --simulator='iPhone 8'",
+    "deleteNodeModules": "rm -rf yarn.lock &&rm -rf package-lock.json&& rm -rf node_modules&& cd ios&&rm -rf pods&&rm -rf podfile.lock&&cd ..&&yarn&&cd ios&&pod install&& cd .. &&yarn bundle-ios "
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
@@ -22,7 +24,6 @@
     "@react-navigation/stack": "5.3.7",
     "@twotalltotems/react-native-otp-input": "^1.3.11",
     "axios": "^0.27.2",
-    "lottie-ios": "3.2.3",
     "lottie-react-native": "^5.0.1",
     "moment": "^2.29.1",
     "react": "17.0.2",
