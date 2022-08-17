@@ -29,6 +29,7 @@ import {logToConsole} from "../Configs/ReactotronConfig";
 import CreateChannel from "../Screens/CreateChannel";
 import Channels from "../Screens/Channels";
 import CallScreen from "../Screens/CallScreen";
+import ChannelDetail from "../Screens/ChannelDetail";
 
 const Stack = createStackNavigator();
 
@@ -40,7 +41,7 @@ const HomeStack = () => {
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             }}>
-            {!userInfo.cell_no && <Stack.Screen name='CreateProfile' component={CreateProfile}/>}
+            {!userInfo.cell_no && !userInfo.isSkipped && <Stack.Screen name='CreateProfile' component={CreateProfile}/>}
             <Stack.Screen name="Home" component={DrawerNavigator}/>
             <Stack.Screen name="RecordAudio" component={RecordAudio}/>
             <Stack.Screen name="Profile" component={Profile}/>
@@ -62,6 +63,7 @@ const HomeStack = () => {
             <Stack.Screen name="QrScanner" component={QRScanner}/>
             <Stack.Screen name="CreateChannel" component={CreateChannel}/>
             <Stack.Screen name="Channels" component={Channels}/>
+            <Stack.Screen name="ChannelDetail" component={ChannelDetail}/>
             <Stack.Screen name="CallScreen" component={CallScreen}/>
 
 

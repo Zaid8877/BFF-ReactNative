@@ -11,6 +11,7 @@ import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
 import {API_STATUS, APP_STRINGS, isEmailValid, isFieldEmpty, isNameFieldValid, isPasswordValid} from "../../Constants";
 import {showToast} from "../../Utils/ToastUtils";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const ChangePassword = () => {
     const [email, setEmail] = useState('');
@@ -58,7 +59,9 @@ const ChangePassword = () => {
     }
 
     return (
-        <RootView style={styles.container} isLoading={forgotPasswordLoading}>
+        <RootView  isLoading={forgotPasswordLoading}>
+            <Icon name={'chevron-left'} size={32} style={{margin:Metrics.defaultMargin}} onPress={()=>{Navigator.goBack()}} />
+            <View style={styles.container}>
             <Heading text="Forgot Password"/>
             <Text style={styles.text}>Please type your email or phone number below</Text>
             <Input
@@ -72,6 +75,7 @@ const ChangePassword = () => {
                 forgotPassword()
             }
             />
+            </View>
         </RootView>
     )
 }
@@ -79,7 +83,6 @@ const ChangePassword = () => {
 const styles = StyleSheet.create({
     container: {
         padding: Metrics.largeMargin,
-        paddingTop: Metrics.screenHeight * 0.1
     },
     text: {
         fontSize: 16,

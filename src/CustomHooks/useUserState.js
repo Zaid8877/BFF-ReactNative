@@ -24,6 +24,7 @@ const useUserState = () => {
       is_Active,
       created_on,
       updated_on,
+      isSkipped,
     } = userInfo || {};
     return {
       id,
@@ -34,6 +35,7 @@ const useUserState = () => {
       name,
       email,
       cell_no,
+      isSkipped,
       user_name,
       password,
       is_Active,

@@ -94,14 +94,14 @@ export default function SignIn() {
         <Button text='Login' onPress={onPress} disabled={isLoginButtonDisabled}/>
         <Text style={styles.boldText}>Don't have an account? <Text onPress={()=>Navigator.navigate('SignUp')} style={{ color: Colors.primary }}>Sign Up</Text></Text>
         <View style={styles.lineView}>
-          <View style={styles.line} />
-          <Text style={styles.or}>Or</Text>
-          <View style={styles.line} />
+          {/*<View style={styles.line} />*/}
+          {/*<Text style={styles.or}>Or</Text>*/}
+          {/*<View style={styles.line} />*/}
         </View>
         <View style={styles.iconView}>
-          <Image source={ Images.facebook } style={styles.icon} />
-          <Image source={ Images.twitter } style={styles.icon} />
-          <Image source={ Images.google } style={styles.icon} />
+          {/*<Image source={ Images.facebook } style={styles.icon} />*/}
+          {/*<Image source={ Images.twitter } style={styles.icon} />*/}
+          {/*<Image source={ Images.google } style={styles.icon} />*/}
         </View>
       </View>
     </RootView>

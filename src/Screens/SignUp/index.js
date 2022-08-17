@@ -14,6 +14,7 @@ import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
 import { useDispatch } from 'react-redux'
 import {signIn} from '../../Store/actions/user'
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const SignUp = () => {
     const [name, setName] = useState('')
@@ -71,8 +72,10 @@ const SignUp = () => {
         }
     }
     return (
-        <RootView style={styles.container} isLoading={registerLoading}>
-            <Heading text="Sign Up"/>
+        <RootView isLoading={registerLoading}>
+            <Icon name={'chevron-left'} size={32} style={{margin:Metrics.defaultMargin}} onPress={()=>{Navigator.goBack()}} />
+            <View style={styles.container}>
+            <Heading text="Sign Up" />
             <Text style={styles.text}>Please type your information below</Text>
             <Input
                 value={name}
@@ -98,6 +101,7 @@ const SignUp = () => {
                         // Navigator.navigate('CreateProfile')
                         register()
                     }/>
+            </View>
         </RootView>
     )
 }
@@ -105,7 +109,6 @@ const SignUp = () => {
 const styles = StyleSheet.create({
     container: {
         padding: Metrics.largeMargin,
-        paddingTop: Metrics.screenHeight * 0.1
     },
     text: {
         fontSize: 16,

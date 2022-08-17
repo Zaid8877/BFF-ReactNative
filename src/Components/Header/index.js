@@ -19,6 +19,7 @@ export default function Header({
     onPressRight = () => { Navigator.navigate('Connect')},
     text,
     showAddIcon = true,
+    addIconName = 'plus',
     showContent = true,
     style,
     showLeft = true
@@ -33,7 +34,7 @@ export default function Header({
                     <Icon name={leftIcon} size={32} onPress={onPressLeft} />}
                     {showAddIcon ?
                         <TouchableOpacity activeOpacity={0.9} onPress={onPressRight} style={styles.iconView}>
-                            <Icon name='plus' size={32} color='white' />
+                            <Icon name={addIconName} size={32} color='white' />
                         </TouchableOpacity>
                         : null}
                 </View>

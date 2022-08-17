@@ -20,6 +20,7 @@ import {API_STATUS} from "../../Constants";
 import {showToast} from "../../Utils/ToastUtils";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import {useIsFocused} from '@react-navigation/native';
+import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 
 const data = [
     {
@@ -77,27 +78,13 @@ export default function Contacts() {
     const renderItem = ({item}) => {
         const {name, email, image, onPress} = item;
         return (
-            <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
-                <View style={[styles.item]}>
-                    <View style={styles.imageView}>
-                        <Image source={image} style={styles.image}/>
-
-                        <View style={styles.iconView}>
-                            <Icon name="check" color="white"/>
-                        </View>
-                    </View>
-                    <View style={styles.textView}>
-                        <Text style={[styles.heading]}>{name}</Text>
-                        <Text style={[styles.text]}>{email}</Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
+          <ContactsItem item={item} onPress={()=>{}}/>
         );
     };
 
     return (
         <RootView statusBar={Colors.lightGrey} isLoading={onLoadingContacts}>
-            <Header secondary title="Contacts" text='No contacts, tap "+" to add'
+            <Header secondary title="Contacts" //text='No contacts, tap "+" to add'
                     onPressRight={() => Navigator.navigate('Connect')}/>
 
             <FlatList

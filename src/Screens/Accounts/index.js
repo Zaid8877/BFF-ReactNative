@@ -29,7 +29,7 @@ export default function Accounts() {
       <Header
         secondary
         title="Accounts"
-        showAddIcon={false} 
+        showAddIcon={false}
       />
       <FlatList
         style={{ paddingTop: Metrics.defaultMargin }}
@@ -41,7 +41,7 @@ export default function Accounts() {
             onPress={id => {
               selectIndex(id);
             }}
-            selected={item.id == index}
+            selected={item.id === index}
           />
         )}
       />

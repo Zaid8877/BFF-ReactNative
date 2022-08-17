@@ -22,7 +22,7 @@ export default function Recents() {
       <Header
         secondary
         title="Recents"
-        showAddIcon={false} 
+        showAddIcon={false}
       />
       <FlatList
         style={{ paddingTop: Metrics.defaultMargin }}
@@ -30,10 +30,10 @@ export default function Recents() {
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <Item
-            showIcon={true}
+            showIcon={false}
             item={item}
             style={{ backgroundColor: Colors.lightGrey }}
-            
+
           />
         )}
       />

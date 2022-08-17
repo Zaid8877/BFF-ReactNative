@@ -101,7 +101,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
     }, []);
 
     const joinChannel = useCallback(async () => {
-        if (peerIds.length === 2) {
+        if (peerIds.length === 5) {
             alert('Channel Maximun Limit Reached')
         } else {
             await rtcEngine.current?.joinChannel(token, channelName, null, 0);

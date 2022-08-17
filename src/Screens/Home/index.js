@@ -42,10 +42,10 @@ export default function Home() {
 
     const renderItem = ({item, index}) => {
         return <Item
-            showIcon={true}
+            showIcon={false}
             item={item}
             style={{backgroundColor: Colors.lightGrey}}
-            onPress={(id)=>{Navigator.navigate("CallScreen", {channel:item})}}
+            onPress={(id)=>{Navigator.navigate("ChannelDetail", {channel:item})}}
         />
     }
 
@@ -68,7 +68,7 @@ export default function Home() {
             <StatusBar backgroundColor={Colors.primary} barStyle='light-content'/>
             <View style={styles.header}>
                 <Icon name="menu" color={Colors.white} size={32} onPress={() => Navigator.openDrawer()}/>
-                <Icon name="chat" color={Colors.white} size={32} onPress={() => Navigator.navigate('Messaging')}/>
+                {/*<Icon name="chat" color={Colors.white} size={32} onPress={() => Navigator.navigate('Messaging')}/>*/}
             </View>
 
             <View style={[styles.item]}>

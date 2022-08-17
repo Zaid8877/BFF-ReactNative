@@ -7,7 +7,6 @@ import {
     Image,
     ScrollView,
     StatusBar,
-    Button
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import RootView from '../../Components/RootView';
@@ -25,6 +24,8 @@ import Header from "../../Components/Header";
 import {useDispatch} from "react-redux";
 import {setRecentChannel} from '../../Store/actions/RecentChannelActions'
 import navigation from "../../Navigation";
+import Button from '../../Components/Button/index'
+import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 
 
 export default function CallScreen({route}) {
@@ -45,6 +46,7 @@ export default function CallScreen({route}) {
         toggleIsSpeakerEnable,
     } = useInitializeAgora(/*channel.channel_name.replace(" ","-")*/);
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
+    // useEffect(()=>{onJoinChannel()},[channel])
 
     const onJoinChannel = ()=>{
           joinChannel().then(item=>{
@@ -101,35 +103,35 @@ export default function CallScreen({route}) {
             {/*</View>*/}
 
 
-            <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{flex: 1, margin:Metrics.defaultMargin}}>
                 {/*<Button*/}
                 {/*    onPress={peerIds.length > 2 ? alert('Only 2 User are Allowed in the Channel') : joinSucceed ? leaveChannel : joinChannel}*/}
                 {/*    title={`${joinSucceed ? 'Leave' : 'Join'} channel`}*/}
                 {/*/>*/}
 
                 {joinSucceed &&
-                    <>
+                    <View>
                         <Text style={{alignSelf: 'center', fontWeight: 'bold', fontSize: 26}}>Connection Status</Text>
                         <Text style={{
                             alignSelf: 'center',
                             fontWeight: 'bold',
                             fontSize: 16
                         }}>{peerIds.length > 1 ? 'Connected' : 'Ringing'}</Text>
-                    </>
+                    </View>
                 }
-                <TouchableOpacity style={{
-                    width: 150,
-                    height: 150,
-                    backgroundColor: joinSucceed ? 'red' : 'pink',
-                    alignSelf: 'center',
-                    borderRadius: 120
-                }} onPress={joinSucceed ? onLeaveChannel: onJoinChannel}>
-                    <Text style={{
-                        alignSelf: 'center',
-                        marginTop: 60,
-                        color: joinSucceed ? 'white' : 'black'
-                    }}>{joinSucceed ? 'End Call' : 'Make a Call'}</Text>
-                </TouchableOpacity>
+                <FlatList
+                    style={{paddingTop: Metrics.defaultMargin}}
+                    data={channel.participants.split(",")}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => (
+                        <ContactsItem
+                            showIcon={false}
+                            item={item}
+                            style={{backgroundColor: Colors.lightGrey}}
+                        />
+                    )}
+                />
+
                 {/* <TouchableOpacity
                     activeOpacity={0.9}
                     onPress={peerIds.length > 2 ? alert('Only 2 User are Allowed in the Channel') : joinSucceed ? leaveChannel : joinChannel}>
@@ -139,6 +141,12 @@ export default function CallScreen({route}) {
                       </View>
                     </View>
                   </TouchableOpacity> */}
+                <View style={{justifyContent:'flex-end'}}>
+                      {joinSucceed && <Button text={"End Call"} style={{backgroundColor:'red'}} onPress={onLeaveChannel} />}
+                      {!joinSucceed &&
+                          <Button text={"Start Call"} onPress={onJoinChannel}/>
+                      }
+                </View>
             </View>
 
             {/*<View style={{paddingVertical: Metrics.defaultMargin}}>*/}

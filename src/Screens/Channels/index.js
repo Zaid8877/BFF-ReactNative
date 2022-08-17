@@ -87,10 +87,10 @@ const Channels=({route}) =>{
                 ListEmptyComponent={isDataLoaded ? <NoRecordFound message={"No Channels Found"}/> : null}
                 renderItem={({item}) => (
                     <Item
-                        showIcon={true}
+                        showIcon={false}
                         item={item}
                         style={{backgroundColor: Colors.lightGrey}}
-                        onPress={(id)=>{Navigator.navigate("CallScreen", {channel:item})}}
+                        onPress={(id)=>{Navigator.navigate("ChannelDetail", {channel:item})}}
                     />
                 )}
             />

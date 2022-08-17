@@ -2,9 +2,10 @@ import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Images from '../../Utils/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Colors, Metrics} from '../../Theme';
+import {Colors} from '../../Theme';
+import {screenWidth} from '../../Theme/Metrics'
 
-export default function Item({item, onPress=()=>{},selected,style,showIcon}) {
+export default function Item({item, onPress=()=>{},selected=false,style,showIcon}) {
   const {channel_name, participants, image, id} = item;
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={() => onPress(id)}>
@@ -15,8 +16,11 @@ export default function Item({item, onPress=()=>{},selected,style,showIcon}) {
           style
         ]}>
         {selected ? <View style={styles.triangle} /> : null}
-        <View style={styles.imageView}>
-          <Image source={image} style={styles.image} />
+        <View style={[styles.imageView, !image? {justifyContent: 'center'}: {padding: 12}]}>
+          {image && <Image source={image} style={styles.image} />}
+
+          {!image && <Text style={{ textAlign: 'center', color: Colors.black, fontSize: 36, fontWeight: 'bold' }}>{channel_name.charAt(0).toUpperCase()}</Text>
+          }
           {selected || showIcon ? (
             <View style={styles.iconView}>
               <Icon name="check" color="white" />

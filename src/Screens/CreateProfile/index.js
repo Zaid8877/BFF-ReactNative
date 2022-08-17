@@ -76,7 +76,7 @@ export default function CreateProfile() {
     return (
         <RootView lightCircle showCircle isLoading={updateProfileLoading}>
             <Header title='Profile' showRight showLeft={false} onPressRight={()=>{
-                dispatch(signIn({...userInfo}))
+                dispatch(signIn({...userInfo, isSkipped:true}))
             }}/>
             <View style={styles.container}>
                 <Image source={Images.person} style={styles.image}/>

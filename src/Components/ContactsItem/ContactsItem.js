@@ -2,20 +2,22 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import React from "react";
 import colors from "../../Theme/Colors";
-import {Metrics} from "../../Theme";
+import {Colors, Metrics} from "../../Theme";
 import SelectedContactsBottomSheet from "../SelectContactsBottomSheet";
+import {logToConsole} from "../../Configs/ReactotronConfig";
 
 const ContactsItem = ({item, isSelected, onPress})=>{
     const {name, email, image} = item;
+    logToConsole(image)
 
     return (<TouchableOpacity activeOpacity={0.9} onPress={onPress}>
         <View style={[styles.item,{alignItems: 'center',  alignSelf:'center', justifyContents:'center'}]}>
-            <View style={styles.imageView}>
-                <Image source={image} style={styles.image}/>
+            <View style={[styles.imageView, !image? {justifyContent: 'center'}: {padding: 12}]}>
+                {image && <Image source={image} style={styles.image} />}
 
-                <View style={styles.iconView}>
-                    <Icon name="check" color="white"/>
-                </View>
+                {!image && <Text style={{ textAlign: 'center', color: Colors.black, fontSize: 36, fontWeight: 'bold' }}>{name && name.charAt(0).toUpperCase()}</Text>
+                }
+
             </View>
             <View style={styles.textView}>
                 <Text style={[styles.heading]}>{name}</Text>
@@ -47,7 +49,6 @@ const styles = StyleSheet.create({
         height: Metrics.screenWidth * 0.15,
         borderRadius: Metrics.screenWidth * 0.15,
         backgroundColor: colors.white,
-        padding: 12,
     },
     image: {
         width: '100%',

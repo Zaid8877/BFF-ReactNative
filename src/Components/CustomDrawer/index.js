@@ -20,22 +20,22 @@ const screens = [
     icon: 'home',
     IconComponent: FontAwesome
   },
-  {
-    name: 'Accounts',
-    icon: 'user',
-    IconComponent: FontAwesome
-
-  },
-  {
-    name: 'Status',
-    icon: 'checkcircle',
-    IconComponent: AntDesign
-  },
-  {
-    name: 'Recents',
-    icon: 'clockcircle',
-    IconComponent: AntDesign
-  },
+  // {
+  //   name: 'Accounts',
+  //   icon: 'user',
+  //   IconComponent: FontAwesome
+  //
+  // },
+  // {
+  //   name: 'Status',
+  //   icon: 'checkcircle',
+  //   IconComponent: AntDesign
+  // },
+  // {
+  //   name: 'Recents',
+  //   icon: 'clockcircle',
+  //   IconComponent: AntDesign
+  // },
   {
     name: 'Contacts',
     icon: 'user-friends',
@@ -46,11 +46,11 @@ const screens = [
     icon: 'group',
     IconComponent: FontAwesome
   },
-  {
-    name: 'Options',
-    icon: 'gear',
-    IconComponent: FontAwesome
-  }
+  // {
+  //   name: 'Options',
+  //   icon: 'gear',
+  //   IconComponent: FontAwesome
+  // }
 ]
 
 const CustomDrawerItem = ({ item, focused }) => {
@@ -113,7 +113,7 @@ export default function CustomDrawer(props) {
           </View>
         </TouchableOpacity>
         <ScrollView bounces={false} style={{ marginBottom: screenWidth * 0.4, overflow: 'visible' }} showsVerticalScrollIndicator={false}>
-          {screens.map((item, i) => <CustomDrawerItem item={item} focused={index == i} />)}
+          {screens.map((item, i) => <CustomDrawerItem item={item} focused={index === i} />)}
 
           <CustomDrawerItem item={{
             name: 'Log Out',
