@@ -66,6 +66,7 @@ export default function CreateProfile() {
         loading: updateProfileLoading,
     } = useApiWrapper({
         type: REQUEST_METHOD.POST,
+        // headers:{'Content-Type': 'multipart/form-data; '},
         endPoint: ApiService.user.updateUserProfile
     });
 
@@ -74,20 +75,22 @@ export default function CreateProfile() {
         const params = new FormData()
         params.append("user_name",name)
         params.append("cell_no",phoneNumber)
-        params.append("profile_pic",image)
+        params.append("profile_pic",image)//?image.data:'')
         // const params = {
         //     user_name: name,
         //     cell_no: phoneNumber,
+        //     profile_pic:image?image.data:''
         // };
         const loginResponse = await onCallUpdateProfileAPI(params);
         const {ok = false, status, data = {}} = loginResponse || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
             logToConsole({data})
             if(data.error){
-                showToast(data.message)
+                showToast(data.message.error)
             }
             else{
-                dispatch(signIn({...userInfo,user_name:name,cell_no:phoneNumber }))
+
+                dispatch(signIn({...userInfo,user_name:name,cell_no:phoneNumber, profile_pic:data.data.profile_pic }))
                 // Alert.alert(APP_STRINGS.APP_NAME, data.message,[{text:APP_STRINGS.OK, style:"default", onPress: () => {Navigator.goBack()},
                 // }],{cancelable:false})
                 // showToast(data.message)
@@ -106,7 +109,7 @@ export default function CreateProfile() {
             }}/>
             <View style={styles.container}>
                 <TouchableOpacity style={styles.image} onPress={()=>{setIsPhotoModal(true)}}>
-                <Image defaultSource={Images.placeholder} source={{uri:image}} style={styles.image}/>
+                <Image defaultSource={Images.placeholder} source={{uri:image.uri}} style={styles.image}/>
                     <View style={styles.iconView}>
                         <Icon name={"upload"}
                               color="white" />

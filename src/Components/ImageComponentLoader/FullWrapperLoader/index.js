@@ -1,6 +1,6 @@
 import React from 'react';
-import {ActivityIndicator, View} from 'react-native';
-import styles from './styles';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import colors from "../../../Theme/Colors";
 
 export const FullWrapperLoader = ({loading, color}) => {
   if (!loading) {
@@ -12,5 +12,15 @@ export const FullWrapperLoader = ({loading, color}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    backgroundColor:colors.grey,
+    alignItems: 'center',
+  },
+  loader: {},
+});
 
 export default FullWrapperLoader;

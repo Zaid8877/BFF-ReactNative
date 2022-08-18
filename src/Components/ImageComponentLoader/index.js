@@ -13,17 +13,25 @@ const ImageComponentLoader = ({
   style,
   resizeMode = 'contain',
   tintColor,
+    isProfile=true,
   ...rest
 }) => {
   const [isImageLoad, setIsImageLoad]=useState(false)
-  logToConsole({source})
-  return (
+  // logToConsole({source})
+    const getSourceImage=()=>{
+      const url = "http://bff.appnoit.com/uploads/"+source
+        logToConsole({url})
+      return {uri:url}
+    }
+    logToConsole({isImageLoad})
+
+    return (
       <View style={containerStyle}>
         <FastImage
             onLoadStart={() => setIsImageLoad(true)}
             onLoadEnd={() => setIsImageLoad(false)}
             style={[styles.image,containerStyle]}
-            source={source?source:Images.placeholder}
+            source={source?getSourceImage():Images.placeholder}
             defaultSource={Images.placeholder}
         />
         <FullWrapperLoader loading={isImageLoad} color={colors.primary} />

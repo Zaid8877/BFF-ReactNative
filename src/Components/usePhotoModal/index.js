@@ -92,7 +92,7 @@ const usePhotoModal = ({
         ...(options || {}),
       });
       photo.data = `data:${photo?.mime};base64,${photo?.data}`;
-      onSetPhoto?.(photo?.data || '');
+      onSetPhoto?.(getPhotoData(photo));
     } catch (error) {
       logToConsole({error});
       if (error.code === 'E_PICKER_CANCELLED') {
@@ -118,6 +118,21 @@ const usePhotoModal = ({
       }
     }
   };
+
+  const getPhotoData=(photo)=>{
+    const {path, mime, filename: name} = photo || {};
+    const filename = name || 'photo.JPG';
+    const timeStampName = getFileName(filename);
+    photo = {
+      ...photo,
+      uri: path,
+      type: mime,
+      // forceJpg: true,
+      compressImageQuality: 0.9,
+      name: timeStampName,
+    };
+    return photo
+  }
   const uploadFromLibrary = async () => {
     await selectPhoto(ImagePicker.openPicker);
   };
