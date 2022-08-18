@@ -18,6 +18,8 @@ const colors = {
   lightGrey: '#F0F0F0',
   grey:'#6e6d6d',
   black_20: 'rgba(0, 0, 0, 0.2)',
+  black_10: 'rgba(0, 0, 0, 0.1)',
+  red: '#FF0000',
 };
 
 export default colors;

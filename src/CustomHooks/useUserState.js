@@ -24,6 +24,7 @@ const useUserState = () => {
       is_Active,
       created_on,
       updated_on,
+      profile_pic,
       isSkipped,
     } = userInfo || {};
     return {
@@ -31,6 +32,7 @@ const useUserState = () => {
       token,
       message,
       message_key,
+      profile_pic,
       error,
       name,
       email,

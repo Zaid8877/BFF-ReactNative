@@ -74,7 +74,7 @@ const UserProfile=({route})=> {
       {isApiLoaded &&
           <ScrollView style={{flex: 1}}>
 
-            <ImageComponentLoader source={{uri: state.profile_pic}} containerStyle={styles.image}/>
+            <ImageComponentLoader source={state.profile_pic} containerStyle={styles.image}/>
             <View
                 multiline
                 style={{

@@ -15,6 +15,7 @@ import Input from '../../Components/Input';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Navigator from '../../Utils/Navigator';
 import useUserState from "../../CustomHooks/useUserState";
+import ImageComponentLoader from "../../Components/ImageComponentLoader";
 
 export default function Profile() {
   const userInfo=useUserState()
@@ -23,7 +24,8 @@ export default function Profile() {
       name: user ? user.name : '',
       user_name: user ? user.user_name : '',
       cell_no: user ? user.cell_no : '',
-      email: user ? user.email : ''
+      email: user ? user.email : '',
+      image: user?user.profile_pic:''
     }
   }
   const [state, setState] = useState(getInitialState(userInfo))
@@ -42,7 +44,7 @@ const isUpdatingProfile = false;
     <RootView isLoading={isUpdatingProfile}>
       <Header title={userInfo.name}  />
       <ScrollView style={{flex: 1}}>
-        <Image source={Images.person} style={styles.image} />
+        <ImageComponentLoader source={state.image} containerStyle={styles.image} />
         <View
           multiline
           style={{

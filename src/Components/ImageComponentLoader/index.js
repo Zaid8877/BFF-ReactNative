@@ -16,14 +16,14 @@ const ImageComponentLoader = ({
   ...rest
 }) => {
   const [isImageLoad, setIsImageLoad]=useState(false)
-  logToConsole({isImageLoad})
+  logToConsole({source})
   return (
       <View style={containerStyle}>
         <FastImage
             onLoadStart={() => setIsImageLoad(true)}
             onLoadEnd={() => setIsImageLoad(false)}
-            style={styles.image}
-            source={source}
+            style={[styles.image,containerStyle]}
+            source={source?source:Images.placeholder}
             defaultSource={Images.placeholder}
         />
         <FullWrapperLoader loading={isImageLoad} color={colors.primary} />

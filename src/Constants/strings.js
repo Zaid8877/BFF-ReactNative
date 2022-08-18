@@ -6,4 +6,11 @@ export const APP_STRINGS = {
   PASSWORD_EMPTY_ERROR:"Password cannot be empty",
   PASSWORD_SHORT_ERROR:"Password is too short",
   OK:"Ok",
+  OPEN_CAMERA: 'Open Camera',
+  REMOVE_IMAGE: 'Remove Image',
+  CANCEL: 'Cancel',
+  UPLOAD_FROM_LIBRARY: 'Upload from Gallery',
+  PERMISSIONS_ERROR: 'Permissions Denied',
+  PERMISSIONS_ERROR_MESSAGE: 'Please enable permissions from settings',
+  OPEN_SETTINGS: 'Open Settings',
 };
