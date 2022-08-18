@@ -9,7 +9,7 @@ import {
     StatusBar,
     Button
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import RootView from '../../Components/RootView';
 import {Colors, Metrics} from '../../Theme';
 import Images from '../../Utils/Images';
@@ -22,37 +22,40 @@ import Item from "../../Components/Item";
 import {logToConsole} from "../../Configs/ReactotronConfig";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
+// import messaging from '@react-native-firebase/messaging';
 
 export default function Home() {
     useRequestAudioHook();
     var recentChannelList = useRecentChannelState()
     logToConsole(recentChannelList)
     const [loadingRecentChannelList, setLoadingRecentChannelList] = useState(false)
-    // const {
-    //     channelName,
-    //     isMute,
-    //     isSpeakerEnable,
-    //     joinSucceed,
-    //     peerIds,
-    //     setChannelName,
-    //     joinChannel,
-    //     leaveChannel,
-    //     toggleIsMute,
-    //     toggleIsSpeakerEnable,
-    // } = useInitializeAgora();
+
+    // useEffect(() => {
+    //     requestUserPermission().then()
+    // }, [])
+
+    // async function requestUserPermission() {
+    //     const authStatus = await messaging().requestPermission();
+    //     const enabled =
+    //         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    //         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    //
+    //     if (enabled) {
+    //         console.log('Authorization status:', authStatus);
+    //     }
+    // }
 
     const renderItem = ({item, index}) => {
-        if(item.callType === "contact") {
-         return <ContactsItem
-             showIcon={false}
-             item={item}
-             style={{backgroundColor: Colors.lightGrey}}
-             onPress={(id) => {
-                 Navigator.navigate("CallScreen", {contact: item})
-             }}
-         />
-        }
-        else{
+        if (item.callType === "contact") {
+            return <ContactsItem
+                showIcon={false}
+                item={item}
+                style={{backgroundColor: Colors.lightGrey}}
+                onPress={(id) => {
+                    Navigator.navigate("CallScreen", {contact: item})
+                }}
+            />
+        } else {
             return <Item
                 showIcon={false}
                 item={item}
@@ -66,10 +69,10 @@ export default function Home() {
 
     const createChannelView = () => {
         return <View style={
-            {alignContent: 'flex-end', alignSelf: 'flex-end', marginVertical: 20, marginHorizontal:20}
+            {alignContent: 'flex-end', alignSelf: 'flex-end', marginVertical: 20, marginHorizontal: 20}
         }>
             <TouchableOpacity activeOpacity={0.9} onPress={() => {
-                Navigator.push("Channels", {isFromMenu:false})
+                Navigator.push("Channels", {isFromMenu: false})
             }} style={styles.iconViewGenerateCall}>
                 <Icon name='plus' size={32} color='white'/>
             </TouchableOpacity>
