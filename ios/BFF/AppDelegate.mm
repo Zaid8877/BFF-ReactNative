@@ -17,6 +17,8 @@
 
 #import <react/config/ReactNativeConfig.h>
 
+//#import <Firebase.h>
+//#import <FirebaseCrahlytics.h>
 
 @interface AppDelegate () <RCTCxxBridgeDelegate, RCTTurboModuleManagerDelegate> {
   RCTTurboModuleManager *_turboModuleManager;
@@ -57,7 +59,7 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [RNSplashScreen show];
-  [FIRApp configure];
+//  [FIRApp configure];
 
   return YES;
 }

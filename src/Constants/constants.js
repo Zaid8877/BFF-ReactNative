@@ -5,9 +5,13 @@ import {logToConsole} from "../Configs/ReactotronConfig";
 //Platforms
 export const isIos = Platform.OS === 'ios';
 export const isAndroid = Platform.OS === 'android';
-export const agoraAppId = 'ded6b8286e3f4641a901f96e5c685f65';
-export const agoraAppCertificate='bcadf1de8eca498e9062e2d416d1e699'
-export const agoraAppToken='006ded6b8286e3f4641a901f96e5c685f65IAA0qt7iH9NVdujhAPvR5eGpNiXLmYCiKTxCB5peL8Hk7Ya0dcYAAAAAEADYBo2ZW2L9YgEAAQBaYv1i'
+// export const agoraAppId = 'ded6b8286e3f4641a901f96e5c685f65';
+// export const agoraAppCertificate='bcadf1de8eca498e9062e2d416d1e699'
+// export const agoraAppToken='006ded6b8286e3f4641a901f96e5c685f65IAA0qt7iH9NVdujhAPvR5eGpNiXLmYCiKTxCB5peL8Hk7Ya0dcYAAAAAEADYBo2ZW2L9YgEAAQBaYv1i'
+
+export const agoraAppId = '5c5c566c59bd407ca8c735b21da82e90';
+export const agoraAppCertificate='d50c92dbf627457db620af01344beb70'
+export const agoraAppToken='007eJxTYCi+OCVW/73tjPe9G/cXbp51xWEh0+ItH37Nlewwe+mR39qqwGCaDIRmZsmmlkkpJgbmyYkWyebGpklGhimJFkaplgYlz/8nfbZgTM6zNGJiZIBAEJ+LIbdSNzkjMS8vNYeBAQAWDiWb'
 
 export const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 export const PASSWORD_REGEX =
