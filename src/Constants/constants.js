@@ -11,7 +11,7 @@ export const isAndroid = Platform.OS === 'android';
 
 export const agoraAppId = '5c5c566c59bd407ca8c735b21da82e90';
 export const agoraAppCertificate='d50c92dbf627457db620af01344beb70'
-export const agoraAppToken='007eJxTYCi+OCVW/73tjPe9G/cXbp51xWEh0+ItH37Nlewwe+mR39qqwGCaDIRmZsmmlkkpJgbmyYkWyebGpklGhimJFkaplgYlz/8nfbZgTM6zNGJiZIBAEJ+LIbdSNzkjMS8vNYeBAQAWDiWb'
+export const agoraAppToken='007eJxTYIgSW31dMtBse67ix6TpFpvOKttrMpcFCWcLXui6fXzyQQEFBtNkIDQzSza1TEoxMTBPTrRINjc2TTIyTEm0MEq1NDBiYkjeGMyYvKoxk5mRAQJBfC6G3Erd5IzEvLzUHAYGAFU/H7k='
 
 export const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 export const PASSWORD_REGEX =

@@ -34,6 +34,7 @@ export default function CallScreen({route}) {
     const userInfo=useUserState()
     let recentCalls = useRecentChannelState();
     const {channel,contact} = route.params
+    const isHost = true
     useRequestAudioHook();
     const dispatch= useDispatch()
     const {
@@ -47,10 +48,20 @@ export default function CallScreen({route}) {
         leaveChannel,
         toggleIsMute,
         toggleIsSpeakerEnable,
-    } = useInitializeAgora(/*contact?"channel_"+contact.id+"_"+userInfo.id: channel.channel_name.replace(" ","-")*/);
+    } = useInitializeAgora(contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace(" ","-"));
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
     // useEffect(()=>{onJoinChannel()},[channel])
-logToConsole({channel})
+    logToConsole({channel})
+
+    const getContactChannel=(contactId, userId)=>{
+        if(isHost){
+            return userId+"_"+contactId
+        }
+        else{
+            return contactId+"_"+userId;
+        }
+    }
+
     const onJoinChannel = ()=>{
           joinChannel().then(item=>{
             logToConsole({item})

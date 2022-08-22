@@ -1,9 +1,13 @@
 import {useEffect, useState, useRef, useCallback} from 'react';
-import {Platform} from 'react-native';
+import {Keyboard, Platform} from 'react-native';
 import RtcEngine from 'react-native-agora';
 import {requestAudioPermission} from '../Permissions/permissions';
 import {logToConsole} from "../../Configs/ReactotronConfig";
-import {agoraAppCertificate, agoraAppId,agoraAppToken} from "../../Constants";
+import {agoraAppCertificate, agoraAppId, agoraAppToken, API_STATUS} from "../../Constants";
+import useUserState from "../../CustomHooks/useUserState";
+import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
+import ApiService from "../../Services/ApiService";
+import {showToast} from "../../Utils/ToastUtils";
 // import Agora from  "agora-access-token";
 
 export const useRequestAudioHook = () => {
@@ -34,10 +38,11 @@ export const useRequestAudioHook = () => {
 // }
 export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNotification = false) => {
     logToConsole({channel_name})
+    const user = useUserState()
     // Replace yourAppId with the App ID of your Agora project.
     const appId = agoraAppId;
     // const appId = 'ed3824ee1946496faddd7abde731c1c2';
-    let token = agoraAppToken// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
+    const [token,setToken] = useState(agoraAppToken)// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
     // '006ed3824ee1946496faddd7abde731c1c2IADawTPNWer1xA5PeSnIDlYUmh0gnu35sjEiAJxf2/wp0Ya0dcYAAAAAEAArT8zLxSS8YgEAAQDEJLxi'
     // '0061af140d1d92848d4a4f315e62e37727bIAB+fGiaLhFQO3PXJPVULfFjNcwWEn6Jp0We13gBM2/eQYa0dcYAAAAAEABVr+ww+rO+XwEAAQD6s75f';
 
@@ -48,6 +53,20 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
     const [isSpeakerEnable, setIsSpeakerEnable] = useState(true);
     const rtcEngine = useRef(null);
 
+    const getTokenFromServer = async () => {
+        // https://bff-test-app.herokuapp.com/rtc/channel-test/publisher/uid/0/?expiry=60
+            fetch('https://bff-test-app.herokuapp.com/rtc/' + channel_name + '/publisher/uid/' + user.id)
+                .then(function (response) {
+                    response.json().then(async function (data) {
+                        setToken(data.rtcToken)
+                        await rtcEngine.current?.joinChannel(data.rtcToken, channel_name, null, 0);
+                    });
+                })
+                .catch(function (err) {
+                    console.log('Fetch Error', err);
+                });
+    }
+
     const initAgora = useCallback(async () => {
         rtcEngine.current = await RtcEngine.create(appId);
 
@@ -57,8 +76,9 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
         await rtcEngine.current?.setEnableSpeakerphone(true);
         //  await rtcEngine.current?.renewToken('7987898')
         // let temp = rtcEngine.current?.("token-privilege-will-expire", async function () {
-        //     let newToken = await rtcEngine.current.renewToken(token);
-        //     logToConsole({newToken})
+        //     var newToken = await rtcEngine.current.renewToken(token);
+        //     setToken(newToken)
+        //     logToConsole({token})
         // });
 
 
@@ -85,7 +105,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
         rtcEngine.current?.addListener(
             'JoinChannelSuccess',
             (channel, uid, elapsed) => {
-                console.log('JoinChannelSuccess', channel, uid, elapsed);
+                logToConsole({channel:channel, id:uid, passed:elapsed});
 
                 setJoinSucceed(true);
 
@@ -104,7 +124,9 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
         if (peerIds.length === 5) {
             alert('Channel Maximun Limit Reached')
         } else {
-            await rtcEngine.current?.joinChannel(token, channelName, null, 0);
+
+            await getTokenFromServer().then()
+            // await rtcEngine.current?.joinChannel(token, channel_name, null, 0);
         }
 
     }, [channelName]);
