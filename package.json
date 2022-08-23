@@ -17,6 +17,8 @@
     "@react-native-community/masked-view": "0.1.11",
     "@react-native-community/slider": "^4.2.1",
     "@react-native-community/toolbar-android": "0.2.1",
+    "@react-native-firebase/app": "^15.3.0",
+    "@react-native-firebase/crashlytics": "^15.3.0",
     "@react-navigation/bottom-tabs": "6.0.9",
     "@react-navigation/drawer": "5.12.3",
     "@react-navigation/native": "5.4.0",
