@@ -20,27 +20,27 @@ import useRecentChannelState from "../../CustomHooks/useRecentChannelState";
 import Item from "../../Components/Item";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
-// import messaging from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 
 export default function Home() {
     useRequestAudioHook();
     var recentChannelList = useRecentChannelState()
     const [loadingRecentChannelList, setLoadingRecentChannelList] = useState(false)
 
-    // useEffect(() => {
-    //     requestUserPermission().then()
-    // }, [])
+    useEffect(() => {
+        requestUserPermission().then()
+    }, [])
 
-    // async function requestUserPermission() {
-    //     const authStatus = await messaging().requestPermission();
-    //     const enabled =
-    //         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    //         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    //
-    //     if (enabled) {
-    //         console.log('Authorization status:', authStatus);
-    //     }
-    // }
+    async function requestUserPermission() {
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+        if (enabled) {
+            console.log('Authorization status:', authStatus);
+        }
+    }
 
     const renderItem = ({item, index}) => {
         if (item.callType === "contact") {
