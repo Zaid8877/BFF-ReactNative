@@ -6,20 +6,12 @@ import Navigator from "../Utils/Navigator"
 import AuthStack from './AuthStack'
 import { ActivityIndicator,View } from "react-native";
 import { Colors } from "../Theme";
-import BottomTab from "./BottomTab";
-import {onBoarding} from "../Store/actions/user";
-import {onBoardingReducer} from "../Store/reducers/onBoardingReducer";
-import {logToConsole} from "../Configs/ReactotronConfig";
-import {userReducer} from "../Store/reducers/user";
 import useUserState from "../CustomHooks/useUserState";
 
 
 const AuthLoading = () => {
     const userInfo=useUserState()
 
-    // const userFromState=useUserState()
-  logToConsole({RootNavigation: userInfo})
-  // logToConsole({RootNavigationUserFroMState: userFromState})
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false)
   useEffect(() => {

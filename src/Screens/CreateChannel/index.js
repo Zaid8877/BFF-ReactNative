@@ -8,7 +8,6 @@ import {Colors, Metrics} from '../../Theme'
 import Images from '../../Utils/Images'
 import QRCode from 'react-native-qrcode-svg';
 import useUserState from "../../CustomHooks/useUserState";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 import Input from "../../Components/Input";
 import {API_STATUS, isFieldEmpty, isNameFieldValid} from "../../Constants";
 import SelectContactsBottomSheet from "../../Components/SelectContactsBottomSheet";
@@ -91,7 +90,6 @@ export default function CreateChannel() {
             ids+=item.name+" ,";
         })
         ids = ids.substring(0, ids.length-2)
-        logToConsole({contacts, ids})
         return ids;
     }
 

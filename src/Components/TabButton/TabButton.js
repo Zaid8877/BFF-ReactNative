@@ -1,10 +1,8 @@
 import {Image, Platform, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import React, {memo} from 'react';
 import Colors from "../../Theme/Colors";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 
 const TabButton = ({containerStyle = {},textContainerStyle={}, name, isSelected, onItemPress}) => {
-  logToConsole({name: name, isSelected: isSelected});
   return (
     // <View style={{flex: 1, flexDirection: 'column'}}>
     <TouchableOpacity

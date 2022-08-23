@@ -1,9 +1,6 @@
 import React from 'react';
 import useFetch from 'use-http';
-import {useSelector} from 'react-redux';
-import Config from 'react-native-config';
 import useUserState from "./useUserState";
-import {logToConsole} from "../Configs/ReactotronConfig";
 
 const useApiService = ({
   options = {},

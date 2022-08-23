@@ -1,6 +1,5 @@
 import {Platform} from 'react-native';
 import {APP_STRINGS} from './strings';
-import {logToConsole} from "../Configs/ReactotronConfig";
 
 //Platforms
 export const isIos = Platform.OS === 'ios';

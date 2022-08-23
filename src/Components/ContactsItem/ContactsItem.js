@@ -4,12 +4,11 @@ import React from "react";
 import colors from "../../Theme/Colors";
 import {Colors, Metrics} from "../../Theme";
 import SelectedContactsBottomSheet from "../SelectContactsBottomSheet";
-import {logToConsole} from "../../Configs/ReactotronConfig";
+
 import ImageComponentLoader from "../ImageComponentLoader";
 
 const ContactsItem = ({item, isSelected, onPress})=>{
     const {name, email, profile_pic:image} = item;
-    logToConsole(item)
 
     return (<TouchableOpacity activeOpacity={0.9} onPress={onPress}>
         <View style={[styles.item,{alignItems: 'center',  alignSelf:'center', justifyContents:'center'}]}>

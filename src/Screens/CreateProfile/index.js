@@ -11,7 +11,6 @@ import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
 import useUserState from "../../CustomHooks/useUserState";
 import {API_STATUS, isEmailValid, isFieldEmpty, isNameFieldValid, isPasswordValid} from "../../Constants";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 import {showToast} from "../../Utils/ToastUtils";
 import Navigator from "../../Utils/Navigator";
 import Metrics from "../../Theme/Metrics";
@@ -33,7 +32,6 @@ export default function CreateProfile() {
         userInfo.cell_no
     })
 
-    logToConsole({image})
     const {renderPhotoModalJSX, isUploadingPhoto} =
         usePhotoModal({
             closeModal: setIsPhotoModal,
@@ -84,7 +82,6 @@ export default function CreateProfile() {
         const loginResponse = await onCallUpdateProfileAPI(params);
         const {ok = false, status, data = {}} = loginResponse || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
-            logToConsole({data})
             if(data.error){
                 showToast(data.message.error)
             }

@@ -25,7 +25,6 @@ import Connect from '../Screens/Connect';
 import QRScanner from '../Screens/QRScanner';
 import useUserState from "../CustomHooks/useUserState";
 import CreateProfile from "../Screens/CreateProfile";
-import {logToConsole} from "../Configs/ReactotronConfig";
 import CreateChannel from "../Screens/CreateChannel";
 import Channels from "../Screens/Channels";
 import CallScreen from "../Screens/CallScreen";
@@ -36,7 +35,6 @@ const Stack = createStackNavigator();
 
 const HomeStack = () => {
     const userInfo = useUserState()
-    logToConsole(userInfo)
     return (<Stack.Navigator
             screenOptions={{
                 headerShown: false,

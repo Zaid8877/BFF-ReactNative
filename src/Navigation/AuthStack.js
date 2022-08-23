@@ -9,7 +9,6 @@ import ForgotPassword from '../Screens/ForgotPassword'
 import Verification from '../Screens/Verification'
 import CreateProfile from '../Screens/CreateProfile'
 import Intro from '../Screens/Intro';
-import {logToConsole} from "../Configs/ReactotronConfig";
 import {useSelector} from 'react-redux';
 import {onBoardingReducer} from "../Store/reducers/onBoardingReducer";
 import ChangePassword from "../Screens/ChangePassword";

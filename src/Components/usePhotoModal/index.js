@@ -7,7 +7,7 @@ import {API_STATUS, APP_STRINGS} from '../../Constants';
 import ImagePicker from 'react-native-image-crop-picker';
 import {REQUEST_METHOD, useApiWrapper} from '../../CustomHooks/useApiWrapper';
 import ApiService from '../../Services/ApiService';
-import {logToConsole} from '../../Configs/ReactotronConfig';
+
 
 export const delay = (ms = 300) =>
     new Promise(resolve => setTimeout(resolve, ms));
@@ -94,7 +94,6 @@ const usePhotoModal = ({
       photo.data = `data:${photo?.mime};base64,${photo?.data}`;
       onSetPhoto?.(getPhotoData(photo));
     } catch (error) {
-      logToConsole({error});
       if (error.code === 'E_PICKER_CANCELLED') {
         return false;
       }

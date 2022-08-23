@@ -25,9 +25,13 @@ const channels={
   update:'/channel/update',
   delete:'channel/delete',///{id}
 }
+const aggora = {
+  getToken:'aggora/get_token' //channel_name=test
+}
 export default {
   auth,
   user,
   contact,
-  channels
+  channels,
+  aggora,
 };

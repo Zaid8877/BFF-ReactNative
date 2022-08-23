@@ -11,23 +11,15 @@ import {
 import React, {useEffect, useState} from 'react';
 import RootView from '../../Components/RootView';
 import {Colors, Metrics} from '../../Theme';
-import Images from '../../Utils/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Navigator from '../../Utils/Navigator';
-import Entypo from 'react-native-vector-icons/Entypo';
 import {useInitializeAgora, useRequestAudioHook} from '../../Components/Hooks/hooks';
 import useRecentChannelState from "../../CustomHooks/useRecentChannelState";
-import Item from "../../Components/Item";
-import {logToConsole} from "../../Configs/ReactotronConfig";
-import NoRecordFound from "../../Components/NoRecordFoundComponent";
-import Header from "../../Components/Header";
 import {useDispatch} from "react-redux";
 import {setRecentChannel} from '../../Store/actions/RecentChannelActions'
-import navigation from "../../Navigation";
 import Button from '../../Components/Button/index'
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 import useUserState from "../../CustomHooks/useUserState";
-import {assertArray} from "@babel/core/lib/config/validation/option-assertions";
 
 
 export default function CallScreen({route}) {
@@ -37,6 +29,15 @@ export default function CallScreen({route}) {
     const isHost = true
     useRequestAudioHook();
     const dispatch= useDispatch()
+
+    const getContactChannel=(contactId, userId)=>{
+        if(isHost){
+            return userId+"_"+contactId
+        }
+        else{
+            return contactId+"_"+userId;
+        }
+    }
     const {
         channelName,
         isMute,
@@ -48,23 +49,13 @@ export default function CallScreen({route}) {
         leaveChannel,
         toggleIsMute,
         toggleIsSpeakerEnable,
-    } = useInitializeAgora(contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace(" ","-"));
+    } = useInitializeAgora(contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-"));
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
     // useEffect(()=>{onJoinChannel()},[channel])
-    logToConsole({channel})
 
-    const getContactChannel=(contactId, userId)=>{
-        if(isHost){
-            return userId+"_"+contactId
-        }
-        else{
-            return contactId+"_"+userId;
-        }
-    }
 
     const onJoinChannel = ()=>{
           joinChannel().then(item=>{
-            logToConsole({item})
         })
         const callType=contact?"contact":"channel"
         const dataToSave = contact?contact:channel

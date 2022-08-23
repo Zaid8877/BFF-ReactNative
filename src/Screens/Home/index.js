@@ -15,11 +15,9 @@ import {Colors, Metrics} from '../../Theme';
 import Images from '../../Utils/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Navigator from '../../Utils/Navigator';
-import Entypo from 'react-native-vector-icons/Entypo';
 import {useInitializeAgora, useRequestAudioHook} from '../../Components/Hooks/hooks';
 import useRecentChannelState from "../../CustomHooks/useRecentChannelState";
 import Item from "../../Components/Item";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 // import messaging from '@react-native-firebase/messaging';
@@ -27,7 +25,6 @@ import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 export default function Home() {
     useRequestAudioHook();
     var recentChannelList = useRecentChannelState()
-    logToConsole(recentChannelList)
     const [loadingRecentChannelList, setLoadingRecentChannelList] = useState(false)
 
     // useEffect(() => {

@@ -1,7 +1,5 @@
 import React, {useMemo} from 'react';
 import {useSelector} from 'react-redux';
-import {userReducer} from "../Store/reducers/user";
-import {logToConsole} from "../Configs/ReactotronConfig";
 const useUserState = () => {
   const {userReducer} = useSelector(
       ({userReducer}) => ({

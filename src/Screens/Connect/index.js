@@ -8,7 +8,7 @@ import {Colors, Metrics} from '../../Theme'
 import Images from '../../Utils/Images'
 import QRCode from 'react-native-qrcode-svg';
 import useUserState from "../../CustomHooks/useUserState";
-import {logToConsole} from "../../Configs/ReactotronConfig";
+
 
 export default function Connect() {
     const [qrvalue, setQrvalue] = useState('');
@@ -18,7 +18,6 @@ export default function Connect() {
     }, [])
     const generateQRCode = () => {
         let userValue=JSON.stringify({name: userInfo.name, id: userInfo.id})
-        logToConsole({userValue})
         setQrvalue(userValue)
     }
     return (

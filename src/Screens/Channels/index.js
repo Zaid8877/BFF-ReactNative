@@ -10,7 +10,6 @@ import ApiService from "../../Services/ApiService";
 import {API_STATUS} from "../../Constants";
 import {showToast} from "../../Utils/ToastUtils";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 import Navigator from "../../Utils/Navigator";
 import {useIsFocused} from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";

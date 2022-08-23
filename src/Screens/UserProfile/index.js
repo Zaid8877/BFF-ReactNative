@@ -20,12 +20,10 @@ import ApiService from "../../Services/ApiService";
 import {API_STATUS} from "../../Constants";
 import {signIn} from "../../Store/actions/user";
 import {showToast} from "../../Utils/ToastUtils";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 import ImageComponent from "../../Components/ImageComponent";
 import ImageComponentLoader from "../../Components/ImageComponentLoader";
 
 const UserProfile=({route})=> {
-    logToConsole(route.params)
   const {userId} = route.params
   const getInitialState=()=> {
     return {

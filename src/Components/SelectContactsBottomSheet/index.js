@@ -23,7 +23,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import NoRecordFound from "../NoRecordFoundComponent";
 import {Metrics} from "../../Theme";
 import colors from "../../Theme/Colors";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 import ContactsItem from "../ContactsItem/ContactsItem";
 import Button from "../Button";
 
@@ -51,7 +50,6 @@ const SelectedContactsBottomSheet = ({isVisible, selectedContacts, onBackKeyPres
     });
 
     const getContacts = async () => {
-        logToConsole("getting contacts")
 
         const loginResponse = await onCallGetContactsApi();
         const {ok = false, status, data = {}} = loginResponse || {};

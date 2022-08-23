@@ -8,7 +8,6 @@ import Button from '../../Components/Button'
 import {useState} from 'react'
 import Navigator from '../../Utils/Navigator'
 import {API_STATUS, APP_STRINGS, isEmailValid, isFieldEmpty, isNameFieldValid, isPasswordValid} from "../../Constants";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 import {showToast} from "../../Utils/ToastUtils";
 import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
@@ -55,7 +54,6 @@ const SignUp = () => {
         const loginResponse = await onCallRegisterApi(params);
         const {ok = false, status, data = {}} = loginResponse || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
-            logToConsole({data})
             if(data.error){
                 showToast(data.message)
             }

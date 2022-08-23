@@ -5,7 +5,6 @@ import {StyleSheet, View} from "react-native";
 import Images from "../../Utils/Images";
 import colors from "../../Theme/Colors";
 import FullWrapperLoader from "./FullWrapperLoader";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 
 const ImageComponentLoader = ({
     containerStyle,
@@ -17,14 +16,10 @@ const ImageComponentLoader = ({
   ...rest
 }) => {
   const [isImageLoad, setIsImageLoad]=useState(false)
-  // logToConsole({source})
     const getSourceImage=()=>{
       const url = "http://bff.appnoit.com/uploads/"+source
-        logToConsole({url})
       return {uri:url}
     }
-    logToConsole({isImageLoad})
-
     return (
       <View style={containerStyle}>
         <FastImage

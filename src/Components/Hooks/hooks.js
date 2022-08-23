@@ -3,7 +3,7 @@ import {Keyboard, Platform} from 'react-native';
 import RtcEngine from 'react-native-agora';
 import {requestAudioPermission} from '../Permissions/permissions';
 import {logToConsole} from "../../Configs/ReactotronConfig";
-import {agoraAppCertificate, agoraAppId, agoraAppToken, API_STATUS} from "../../Constants";
+import {agoraAppId, agoraAppToken, API_STATUS, isIos} from "../../Constants";
 import useUserState from "../../CustomHooks/useUserState";
 import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
@@ -22,6 +22,7 @@ export const useRequestAudioHook = () => {
     }, []);
 };
 
+
 // const generateToken = (channel_name, isOpenedFromNotification) => {
 //     const appID = agoraAppId;
 //     const appCertificate = agoraAppCertificate;
@@ -37,12 +38,12 @@ export const useRequestAudioHook = () => {
 //     return token
 // }
 export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNotification = false) => {
-    logToConsole({channel_name})
     const user = useUserState()
     // Replace yourAppId with the App ID of your Agora project.
     const appId = agoraAppId;
     // const appId = 'ed3824ee1946496faddd7abde731c1c2';
-    const [token,setToken] = useState(agoraAppToken)// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
+    const [aggoraToken,setAggoraToken] = useState(agoraAppToken)// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
+    const [aggoraUid,setAggoraUid] = useState('0')// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
     // '006ed3824ee1946496faddd7abde731c1c2IADawTPNWer1xA5PeSnIDlYUmh0gnu35sjEiAJxf2/wp0Ya0dcYAAAAAEAArT8zLxSS8YgEAAQDEJLxi'
     // '0061af140d1d92848d4a4f315e62e37727bIAB+fGiaLhFQO3PXJPVULfFjNcwWEn6Jp0We13gBM2/eQYa0dcYAAAAAEABVr+ww+rO+XwEAAQD6s75f';
 
@@ -53,18 +54,43 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
     const [isSpeakerEnable, setIsSpeakerEnable] = useState(true);
     const rtcEngine = useRef(null);
 
+    const {
+        onCallApi: onCallApiToGetToken,
+        loading: onLoadingChannels,
+    } = useApiWrapper({
+        type: REQUEST_METHOD.GET,
+        endPoint: ApiService.aggora.getToken
+    });
+
+
     const getTokenFromServer = async () => {
         // https://bff-test-app.herokuapp.com/rtc/channel-test/publisher/uid/0/?expiry=60
-            fetch('https://bff-test-app.herokuapp.com/rtc/' + channel_name + '/publisher/uid/' + user.id)
-                .then(function (response) {
-                    response.json().then(async function (data) {
-                        setToken(data.rtcToken)
-                        await rtcEngine.current?.joinChannel(data.rtcToken, channel_name, null, 0);
-                    });
-                })
-                .catch(function (err) {
-                    console.log('Fetch Error', err);
-                });
+
+        const response = await onCallApiToGetToken({channel_name:channel_name}, );
+        const {ok = false, status, data = {}} = response || {};
+        if (ok && API_STATUS.SUCCESS.includes(String(status))) {
+            if (data.error) {
+                showToast(data.message)
+            } else {
+                setAggoraToken(data.aggora_token)
+                setAggoraUid(data.uid)
+                await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null, isIos?data.uid:Number(data.uid));
+                // const etcjannelReward = await rtcEngine.current?.joinChannel(data.aggora_token/*, channel_name, null, data.uid*/);
+                // logToConsole({etcjannelReward})
+            }
+        } else {
+
+        }
+            // fetch('https://bff-test-app.herokuapp.com/rtc/' + channel_name + '/publisher/uid/' + user.id)
+            //     .then(function (response) {
+            //         response.json().then(async function (data) {
+            //             setToken(data.rtcToken)
+            //             await rtcEngine.current?.joinChannel(data.rtcToken, channel_name, null, 0);
+            //         });
+            //     })
+            //     .catch(function (err) {
+            //         console.log('Fetch Error', err);
+            //     });
     }
 
     const initAgora = useCallback(async () => {
@@ -101,6 +127,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
                 return peerIdsLocal.filter((id) => id !== uid);
             });
         });
+
 
         rtcEngine.current?.addListener(
             'JoinChannelSuccess',

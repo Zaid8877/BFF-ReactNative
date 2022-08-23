@@ -7,7 +7,6 @@ import {Colors, Metrics} from '../../Theme'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import colors from '../../Theme/Colors'
-import {logToConsole} from "../../Configs/ReactotronConfig";
 import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
 import {API_STATUS} from "../../Constants";
@@ -29,7 +28,7 @@ export default function QRScanner() {
     });
 
     const addContact = async (id) => {
-        Keyboard.dismiss();logToConsole({id})
+        Keyboard.dismiss();
         const params = {
             user_id:id,
         };

@@ -13,7 +13,6 @@ import {REQUEST_METHOD, useApiWrapper} from '../../CustomHooks/useApiWrapper';
 import ApiService from '../../Services/ApiService';
 import {API_STATUS, APP_STRINGS, isEmailValid, isFieldEmpty, isPasswordValid} from "../../Constants";
 import {showToast} from "../../Utils/ToastUtils";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 
 export default function SignIn() {
   const [email, setEmail] = useState('')
