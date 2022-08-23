@@ -31,12 +31,13 @@ export default function CallScreen({route}) {
     const dispatch= useDispatch()
 
     const getContactChannel=(contactId, userId)=>{
-        if(isHost){
-            return userId+"_"+contactId
-        }
-        else{
-            return contactId+"_"+userId;
-        }
+        // if(isHost){
+        //     return userId+"_"+contactId
+        // }
+        // else{
+        //     return contactId+"_"+userId;
+        // }
+        return 1212
     }
     const {
         channelName,

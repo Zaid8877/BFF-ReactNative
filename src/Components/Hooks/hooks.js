@@ -74,7 +74,8 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
             } else {
                 setAggoraToken(data.aggora_token)
                 setAggoraUid(data.uid)
-                await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null, isIos?data.uid:Number(data.uid));
+                const uid =  Number(data.uid)
+                await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null,uid);
                 // const etcjannelReward = await rtcEngine.current?.joinChannel(data.aggora_token/*, channel_name, null, data.uid*/);
                 // logToConsole({etcjannelReward})
             }

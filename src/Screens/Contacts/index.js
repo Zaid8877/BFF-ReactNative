@@ -78,7 +78,9 @@ export default function Contacts() {
     const renderItem = ({item}) => {
         const {name, email, image, onPress} = item;
         return (
-          <ContactsItem item={item} onPress={()=>{}}/>
+          <ContactsItem item={item} onPress={()=>{
+              Navigator.navigate("CallScreen",{contact:item})}
+          }/>
         );
     };
 
