@@ -20,6 +20,9 @@ import {setRecentChannel} from '../../Store/actions/RecentChannelActions'
 import Button from '../../Components/Button/index'
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 import useUserState from "../../CustomHooks/useUserState";
+import Entypo from "react-native-vector-icons/Entypo";
+import colors from "../../Theme/Colors";
+import Images from "../../Utils/Images";
 
 
 export default function CallScreen({route}) {
@@ -50,6 +53,7 @@ export default function CallScreen({route}) {
         leaveChannel,
         toggleIsMute,
         toggleIsSpeakerEnable,
+        onLoadingChannels,
     } = useInitializeAgora(contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-"));
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
     // useEffect(()=>{onJoinChannel()},[channel])
@@ -111,7 +115,7 @@ export default function CallScreen({route}) {
             {/*</View>*/}
 
 
-            <View style={{flex: 1, margin:Metrics.defaultMargin}}>
+            <View style={{flex: 1, marginTop:Metrics.defaultMargin}}>
                 {/*<Button*/}
                 {/*    onPress={peerIds.length > 2 ? alert('Only 2 User are Allowed in the Channel') : joinSucceed ? leaveChannel : joinChannel}*/}
                 {/*    title={`${joinSucceed ? 'Leave' : 'Join'} channel`}*/}
@@ -154,9 +158,23 @@ export default function CallScreen({route}) {
                     </View>
                   </TouchableOpacity> */}
                 <View style={{justifyContent:'flex-end'}}>
-                      {joinSucceed && <Button text={"End Call"} style={{backgroundColor:'red'}} onPress={onLeaveChannel} />}
+                    {joinSucceed && <View style={{flexDirection:'row',width:'100%',justifyContent:'space-between',alignItems:'center',  backgroundColor:colors.grey, padding:Metrics.defaultMargin}}>
+
+                        <TouchableOpacity activeOpacity={0.9} style={{borderRadius:40,padding:10, backgroundColor: isMute?colors.black:colors.transparent}} onPress={()=>{toggleIsMute()}}>
+                            <Image source={Images.mic} style={[{height:30, width:30, tintColor: colors.white}]}  />
+                        </TouchableOpacity>
+
+
+                        <TouchableOpacity activeOpacity={0.9} style={{borderRadius:40,padding:10, backgroundColor:colors.red}} onPress={onLeaveChannel}>
+                            <Image source={Images.endCall} style={[{height:30, width:30, tintColor: colors.white}]}  />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={0.9} style={{borderRadius:40,padding:10, backgroundColor: isSpeakerEnable?colors.black:colors.transparent}} onPress={()=>{toggleIsSpeakerEnable()}}>
+                            <Image source={Images.speaker} style={[{height:30, width:30, tintColor: colors.white}]}  />
+                        </TouchableOpacity>
+                    </View>}
                       {!joinSucceed &&
-                          <Button text={"Start Call"} onPress={onJoinChannel}/>
+                          <Button text={"Start Call"}  disabled={onLoadingChannels} style={{margin:Metrics.defaultMargin}} onPress={onJoinChannel}/>
                       }
                 </View>
             </View>

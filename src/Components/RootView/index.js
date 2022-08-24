@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StatusBar, Platform, ActivityIndicator} from 'react-native';
+import {View, StatusBar, Platform, ActivityIndicator, KeyboardAvoidingView} from 'react-native';
 import {Colors, Metrics} from '../../Theme';
 import {SafeAreaInsetsContext} from 'react-native-safe-area-context';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -37,7 +37,7 @@ const RootView  =({
 
     }) => {
     return (
-        <View style={{flex: 1, backgroundColor: statusBar}}>
+        <KeyboardAvoidingView enabled={true} style={{flex: 1, backgroundColor: statusBar}}>
             <StatusBar
                 translucent={true}
                 barStyle={barStyle}
@@ -81,7 +81,7 @@ const RootView  =({
                 shadowRadius: 24.00,
                 elevation: 24,
             }, rightCircle ? {right: -screenWidth * 0.4} : {left: -screenWidth * 0.4}]}/>}
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 export default RootView;

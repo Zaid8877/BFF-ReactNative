@@ -19,4 +19,7 @@ export default {
   qr:require('../../assets/images/qr.png'),
   leftArrow:require('../../assets/images/leftArrow.png'),
   placeholder:require('../../assets/images/placeholder-cover.png'),
+  endCall:require('../../assets/images/call.png'),
+  speaker:require('../../assets/images/speaker_icon.png'),
+  mic:require('../../assets/images/mic_icon.png'),
 }
