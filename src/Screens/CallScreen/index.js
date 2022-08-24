@@ -23,6 +23,8 @@ import useUserState from "../../CustomHooks/useUserState";
 import Entypo from "react-native-vector-icons/Entypo";
 import colors from "../../Theme/Colors";
 import Images from "../../Utils/Images";
+import CallContactsItem from "../../Components/CallContactsItem/CallContactsItem";
+import {logToConsole} from "../../Configs/ReactotronConfig";
 
 
 export default function CallScreen({route}) {
@@ -54,6 +56,7 @@ export default function CallScreen({route}) {
         toggleIsMute,
         toggleIsSpeakerEnable,
         onLoadingChannels,
+        peerMuted,
     } = useInitializeAgora(contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-"));
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
     // useEffect(()=>{onJoinChannel()},[channel])
@@ -132,18 +135,21 @@ export default function CallScreen({route}) {
                         data={channel.participantsList}
                         keyExtractor={item => item.id}
                         renderItem={({item}) => (
-                            <ContactsItem
+                            <CallContactsItem
                                 showIcon={false}
                                 item={item}
                                 style={{backgroundColor: Colors.lightGrey}}
-                            />
+                                peer={peerMuted.id}
+                                isMute={peerMuted.isMute}                            />
                         )}
                     />
                 }
-                {contact && <View style={{flex:1}}><ContactsItem
+                {contact && <View style={{flex:1, alignItems:'center', alignSelf:'center', alignContent:'center', justifyContent:'center'}}><CallContactsItem
                     showIcon={false}
                     item={contact}
                     style={{backgroundColor: Colors.lightGrey}}
+                    peer={peerMuted.id}
+                    isMute={peerMuted.isMute}
                 />
                 </View>
                     }

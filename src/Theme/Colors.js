@@ -19,6 +19,8 @@ const colors = {
   grey:'#6e6d6d',
   black_20: 'rgba(0, 0, 0, 0.2)',
   black_10: 'rgba(0, 0, 0, 0.1)',
+  black_40: 'rgba(0, 0, 0, 0.4)',
+  black_60: 'rgba(0, 0, 0, 0.6)',
   red: '#FF0000',
 };
 

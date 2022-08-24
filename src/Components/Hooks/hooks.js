@@ -8,7 +8,12 @@ import useUserState from "../../CustomHooks/useUserState";
 import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
 import {showToast} from "../../Utils/ToastUtils";
-import {AudioProfile, AudioScenario} from "react-native-agora/src/common/Enums";
+import {
+    AudioProfile,
+    AudioRemoteState,
+    AudioRemoteStateReason,
+    AudioScenario
+} from "react-native-agora/src/common/Enums";
 // import Agora from  "agora-access-token";
 
 export const useRequestAudioHook = () => {
@@ -53,6 +58,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
     const [peerIds, setPeerIds] = useState([]);
     const [isMute, setIsMute] = useState(false);
     const [isSpeakerEnable, setIsSpeakerEnable] = useState(true);
+    const [peerMuted, setPeerMuted] = useState({id:'', isMute:false});
     const rtcEngine = useRef(null);
 
     const {
@@ -78,6 +84,8 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
                 const uid = Number(data.uid)
                 setIsMute(false)
                 setIsSpeakerEnable(false)
+                setPeerMuted({id:'',isMute: false});
+
                 await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null, uid);
                 // const etcjannelReward = await rtcEngine.current?.joinChannel(data.aggora_token/*, channel_name, null, data.uid*/);
                 // logToConsole({etcjannelReward})
@@ -152,6 +160,14 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
                 });
             },
         );
+        rtcEngine.current?.addListener(
+            'RemoteAudioStateChanged',
+            (  uid,
+               state,
+               reason,) => {
+                setPeerMuted({id:uid, isMute: reason === 5 && state === 0})
+            },
+        );
 
         rtcEngine.current?.addListener('Error', (error) => {
             console.log('Error', error);
@@ -174,6 +190,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
 
         setPeerIds([]);
         setJoinSucceed(false);
+        setPeerMuted({id:'',isMute: false});
     }, []);
 
     const toggleIsMute = useCallback(async () => {
@@ -209,6 +226,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
         leaveChannel,
         toggleIsMute,
         toggleIsSpeakerEnable,
-        onLoadingChannels
+        onLoadingChannels,
+        peerMuted,
     };
 };
