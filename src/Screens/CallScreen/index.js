@@ -81,8 +81,9 @@ export default function CallScreen({route}) {
         dispatch(setRecentChannel(recentCalls))
     }
     const onLeaveChannel = ()=>{
-        leaveChannel()
-        Navigator.goBack()
+        leaveChannel().then(it=>
+            Navigator.goBack()
+        )
 
     }
 
@@ -118,12 +119,7 @@ export default function CallScreen({route}) {
 
                 {joinSucceed &&
                     <View>
-                        <Text style={{alignSelf: 'center', fontWeight: 'bold', fontSize: 26}}>Connection Status</Text>
-                        <Text style={{
-                            alignSelf: 'center',
-                            fontWeight: 'bold',
-                            fontSize: 16
-                        }}>{peerIds.length > 1 ? 'Connected' : 'Ringing'}</Text>
+                        <Text style={{alignSelf: 'center', fontWeight: 'bold', marginBottom:20, fontSize: 26}}>{peerIds.length > 1 ? 'Connected' : 'Ringing'}</Text>
                     </View>
                 }
                 {channel && channel.participantsList.length > 0 &&

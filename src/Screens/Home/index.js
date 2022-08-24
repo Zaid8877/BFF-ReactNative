@@ -7,7 +7,7 @@ import {
     Image,
     ScrollView,
     StatusBar,
-    Button
+    Button, PermissionsAndroid
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import RootView from '../../Components/RootView';
@@ -21,6 +21,9 @@ import Item from "../../Components/Item";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 import messaging from '@react-native-firebase/messaging';
+import RNCallKeep from 'react-native-callkeep';
+import {APP_STRINGS} from "../../Constants";
+import {logToConsole} from "../../Configs/ReactotronConfig";
 
 export default function Home() {
     useRequestAudioHook();
@@ -29,7 +32,45 @@ export default function Home() {
 
     useEffect(() => {
         requestUserPermission().then()
+        setUpCallKeep().then(r => {});
     }, [])
+
+
+    const setUpCallKeep= async ()=>{
+        // const initializeCallKeep = async () => {
+            try {
+                const isAvailable = await RNCallKeep.isConnectionServiceAvailable()
+                if(isAvailable){
+                    logToConsole("Connection Service Not Available")
+                    await RNCallKeep.setup({
+                    ios: {
+                        appName: 'BFF',
+                    },
+                    android: {
+                        alertTitle: 'Permissions required',
+                        alertDescription: 'This application needs to access your phone accounts',
+                        cancelButton: 'Cancel',
+                        okButton: 'ok',
+                    }
+                });
+                RNCallKeep.setAvailable(true);
+                }
+                else{
+                    logToConsole("Connection Service Not Available")
+                }
+            } catch (err) {
+                console.error('initializeCallKeep error:', err.message);
+            }
+
+        //     // Add RNCallKit Events
+        //     RNCallKeep.addEventListener('didReceiveStartCallAction', onNativeCall);
+        //     RNCallKeep.addEventListener('answerCall', onAnswerCallAction);
+        //     RNCallKeep.addEventListener('endCall', onEndCallAction);
+        //     RNCallKeep.addEventListener('didDisplayIncomingCall', onIncomingCallDisplayed);
+        //     RNCallKeep.addEventListener('didPerformSetMutedCallAction', onToggleMute);
+        //     RNCallKeep.addEventListener('didPerformDTMFAction', onDTMF);
+        // };
+    }
 
     async function requestUserPermission() {
         const authStatus = await messaging().requestPermission();

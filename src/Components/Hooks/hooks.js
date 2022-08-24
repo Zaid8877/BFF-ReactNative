@@ -8,6 +8,7 @@ import useUserState from "../../CustomHooks/useUserState";
 import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
 import {showToast} from "../../Utils/ToastUtils";
+import {AudioProfile, AudioScenario} from "react-native-agora/src/common/Enums";
 // import Agora from  "agora-access-token";
 
 export const useRequestAudioHook = () => {
@@ -42,8 +43,8 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
     // Replace yourAppId with the App ID of your Agora project.
     const appId = agoraAppId;
     // const appId = 'ed3824ee1946496faddd7abde731c1c2';
-    const [aggoraToken,setAggoraToken] = useState(agoraAppToken)// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
-    const [aggoraUid,setAggoraUid] = useState('0')// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
+    const [aggoraToken, setAggoraToken] = useState(agoraAppToken)// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
+    const [aggoraUid, setAggoraUid] = useState('0')// generateToken(channel_name, isOpenedFromNotification)// '006ded6b8286e3f4641a901f96e5c685f65IAAbDYLnX6n8UY0hRe13fBAN8k1H5jgnvXgV//nAdfTukYa0dcYAAAAAEABiLYCEqdL4YgEAAQCp0vhi'
     // '006ed3824ee1946496faddd7abde731c1c2IADawTPNWer1xA5PeSnIDlYUmh0gnu35sjEiAJxf2/wp0Ya0dcYAAAAAEAArT8zLxSS8YgEAAQDEJLxi'
     // '0061af140d1d92848d4a4f315e62e37727bIAB+fGiaLhFQO3PXJPVULfFjNcwWEn6Jp0We13gBM2/eQYa0dcYAAAAAEABVr+ww+rO+XwEAAQD6s75f';
 
@@ -66,7 +67,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
     const getTokenFromServer = async () => {
         // https://bff-test-app.herokuapp.com/rtc/channel-test/publisher/uid/0/?expiry=60
 
-        const response = await onCallApiToGetToken({channel_name:channel_name}, );
+        const response = await onCallApiToGetToken({channel_name: channel_name},);
         const {ok = false, status, data = {}} = response || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
             if (data.error) {
@@ -74,28 +75,29 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
             } else {
                 setAggoraToken(data.aggora_token)
                 setAggoraUid(data.uid)
-                const uid =  Number(data.uid)
-                await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null,uid);
+                const uid = Number(data.uid)
+                await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null, uid);
                 // const etcjannelReward = await rtcEngine.current?.joinChannel(data.aggora_token/*, channel_name, null, data.uid*/);
                 // logToConsole({etcjannelReward})
             }
         } else {
 
         }
-            // fetch('https://bff-test-app.herokuapp.com/rtc/' + channel_name + '/publisher/uid/' + user.id)
-            //     .then(function (response) {
-            //         response.json().then(async function (data) {
-            //             setToken(data.rtcToken)
-            //             await rtcEngine.current?.joinChannel(data.rtcToken, channel_name, null, 0);
-            //         });
-            //     })
-            //     .catch(function (err) {
-            //         console.log('Fetch Error', err);
-            //     });
+        // fetch('https://bff-test-app.herokuapp.com/rtc/' + channel_name + '/publisher/uid/' + user.id)
+        //     .then(function (response) {
+        //         response.json().then(async function (data) {
+        //             setToken(data.rtcToken)
+        //             await rtcEngine.current?.joinChannel(data.rtcToken, channel_name, null, 0);
+        //         });
+        //     })
+        //     .catch(function (err) {
+        //         console.log('Fetch Error', err);
+        //     });
     }
 
     const initAgora = useCallback(async () => {
         rtcEngine.current = await RtcEngine.create(appId);
+        rtcEngine.current.setAudioProfile(AudioProfile.Default, AudioScenario.Default)
 
         await rtcEngine.current?.enableAudio();
         await rtcEngine.current?.enableLocalAudio(true);
@@ -123,6 +125,11 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
 
         rtcEngine.current?.addListener('UserOffline', (uid, reason) => {
             console.log('UserOffline', uid, reason);
+            const remainingPears = peerIds.filter((id) => id !== uid)
+            logToConsole({remainingPears, length: remainingPears.length})
+            if (remainingPears.length === 0) {
+                leaveChannel()
+            }
 
             setPeerIds((peerIdsLocal) => {
                 return peerIdsLocal.filter((id) => id !== uid);
@@ -133,7 +140,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
         rtcEngine.current?.addListener(
             'JoinChannelSuccess',
             (channel, uid, elapsed) => {
-                logToConsole({channel:channel, id:uid, passed:elapsed});
+                logToConsole({channel: channel, id: uid, passed: elapsed});
 
                 setJoinSucceed(true);
 
@@ -152,7 +159,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
         if (peerIds.length === 5) {
             alert('Channel Maximun Limit Reached')
         } else {
-
+            // rtcEngine.current.pauseAllChannelMediaRelay()
             await getTokenFromServer().then()
             // await rtcEngine.current?.joinChannel(token, channel_name, null, 0);
         }
