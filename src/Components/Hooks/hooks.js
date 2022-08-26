@@ -114,6 +114,7 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
         await rtcEngine.current?.enableLocalAudio(true);
         await rtcEngine.current?.muteLocalAudioStream(false);
         await rtcEngine.current?.setEnableSpeakerphone(true);
+        await rtcEngine.current?.enableDeepLearningDenoise(true);
         //  await rtcEngine.current?.renewToken('7987898')
         // let temp = rtcEngine.current?.("token-privilege-will-expire", async function () {
         //     var newToken = await rtcEngine.current.renewToken(token);

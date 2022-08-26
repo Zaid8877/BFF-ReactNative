@@ -166,7 +166,7 @@ export default function CallScreen({route}) {
                   </TouchableOpacity> */}
                 <View style={{justifyContent:'flex-end'}}>
                     {joinSucceed && <View style={{flexDirection:'row',width:'100%',justifyContent:'space-between',alignItems:'center',  backgroundColor:colors.grey, padding:Metrics.defaultMargin}}>
-
+                        {logToConsole({joinSucceed})}
                         <TouchableOpacity activeOpacity={0.9} style={{borderRadius:40,padding:10, backgroundColor: isMute?colors.black:colors.transparent}} onPress={()=>{toggleIsMute()}}>
                             <Image source={Images.mic} style={[{height:30, width:30, tintColor: colors.white}]}  />
                         </TouchableOpacity>
