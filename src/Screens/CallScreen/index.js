@@ -134,6 +134,7 @@ export default function CallScreen({route}) {
                         style={{paddingTop: Metrics.defaultMargin}}
                         data={channel.participantsList}
                         keyExtractor={item => item.id}
+                        numColumns={2}
                         renderItem={({item}) => (
                             <CallContactsItem
                                 showIcon={false}
