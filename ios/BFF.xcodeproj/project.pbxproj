@@ -52,6 +52,7 @@
 		537B2BEC19D5408991BDA40A /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = ../assets/fonts/Ionicons.ttf; sourceTree = "<group>"; };
 		592FF4D328B5779100FF9750 /* BFF.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = BFF.entitlements; path = BFF/BFF.entitlements; sourceTree = "<group>"; };
 		59518B2828AEDE8800DEF217 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../../../Users/raheel/Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		59AAFB8728B9682100F5AC78 /* AgoraAIDenoiseExtension.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AgoraAIDenoiseExtension.xcframework; path = Pods/AgoraRtcEngine_iOS/AgoraAIDenoiseExtension.xcframework; sourceTree = "<group>"; };
 		5F0CD17B9A3C4B6584E76A62 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = ../assets/fonts/Zocial.ttf; sourceTree = "<group>"; };
 		67D18903DC5C0390AD629EBA /* Pods-BFF-BFFTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BFF-BFFTests.release.xcconfig"; path = "Target Support Files/Pods-BFF-BFFTests/Pods-BFF-BFFTests.release.xcconfig"; sourceTree = "<group>"; };
 		6B94F3C7AB59423D8211BB8D /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = ../assets/fonts/MaterialIcons.ttf; sourceTree = "<group>"; };
@@ -128,6 +129,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				59AAFB8728B9682100F5AC78 /* AgoraAIDenoiseExtension.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				6C390646F798A7C615D52802 /* libPods-BFF.a */,
 				0547B0243E7537C0E3D10464 /* libPods-BFF-BFFTests.a */,
