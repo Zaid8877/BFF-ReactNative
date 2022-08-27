@@ -17,8 +17,8 @@ const CallContactsItem = ({item, isSelected, peer = '', isMute = false,}) => {
     return (
         <View style={[styles.item, {alignItems: 'center', alignSelf: 'center', justifyContents: 'center'}]}>
 
-            <View style={[styles.imageView, !image ? {justifyContent: 'center'} : {padding: 12}]}>
-                {image && <ImageComponentLoader source={image} style={styles.image}/>}
+            <View style={[styles.imageView, !image ? {justifyContent: 'center'} : {padding: 0}]}>
+                {image && <ImageComponentLoader source={image} containerStyle={styles.imageView}/>}
                 {!image && <Text style={{
                     textAlign: 'center',
                     color: Colors.black,

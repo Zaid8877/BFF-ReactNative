@@ -131,17 +131,19 @@ export default function CallScreen({route}) {
                 }
                 {channel && channel.participantsList.length > 0 &&
                     <FlatList
-                        style={{paddingTop: Metrics.defaultMargin}}
+                        style={{padding: Metrics.defaultMargin}}
                         data={channel.participantsList}
                         keyExtractor={item => item.id}
                         numColumns={2}
                         renderItem={({item}) => (
+                            <View style={{flex:1}}>
                             <CallContactsItem
                                 showIcon={false}
                                 item={item}
                                 style={{backgroundColor: Colors.lightGrey}}
                                 peer={peerMuted.id}
-                                isMute={peerMuted.isMute}                            />
+                                isMute={peerMuted.isMute} />
+                            </View>
                         )}
                     />
                 }

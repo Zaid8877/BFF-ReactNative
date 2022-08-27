@@ -28,7 +28,8 @@ const channels={
   delete:'channel/delete',///{id}
 }
 const aggora = {
-  getToken:'aggora/get_token' //channel_name=test
+  getToken:'/aggora/get_token', //channel_name=test
+  getTokenAndPush:'/agora/generate_token_and_send_push' //channel_name=test
 }
 export default {
   auth,

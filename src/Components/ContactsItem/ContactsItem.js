@@ -6,14 +6,15 @@ import {Colors, Metrics} from "../../Theme";
 import SelectedContactsBottomSheet from "../SelectContactsBottomSheet";
 
 import ImageComponentLoader from "../ImageComponentLoader";
+import {logToConsole} from "../../Configs/ReactotronConfig";
 
 const ContactsItem = ({item, isSelected, onPress})=>{
     const {name, email, profile_pic:image} = item;
 
     return (<TouchableOpacity activeOpacity={0.9} onPress={onPress}>
         <View style={[styles.item,{alignItems: 'center',  alignSelf:'center', justifyContents:'center'}]}>
-            <View style={[styles.imageView, !image? {justifyContent: 'center'}: {padding: 12}]}>
-                {image && <ImageComponentLoader source={image} style={styles.image} />}
+            <View style={[styles.imageView, !image? {justifyContent: 'center'}: {padding: 0}]}>
+                {image && <ImageComponentLoader source={image}  containerStyle={[styles.image,{backgroundColor: colors.grey}]} />}
                 {!image && <Text style={{ textAlign: 'center', color: Colors.black, fontSize: 36, fontWeight: 'bold' }}>{name && name.charAt(0).toUpperCase()}</Text>
                 }
 
@@ -50,13 +51,12 @@ const styles = StyleSheet.create({
         width: Metrics.screenWidth * 0.15,
         height: Metrics.screenWidth * 0.15,
         borderRadius: Metrics.screenWidth * 0.15,
-        backgroundColor: colors.white,
+        backgroundColor:colors.white
     },
     image: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 200,
-        tintColor: colors.primary,
+        width: Metrics.screenWidth * 0.15,
+        height: Metrics.screenWidth * 0.15,
+        borderRadius: Metrics.screenWidth * 0.15,
     },
     iconView: {
         position: 'absolute',

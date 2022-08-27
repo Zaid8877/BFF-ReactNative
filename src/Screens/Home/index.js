@@ -36,11 +36,11 @@ export default function Home() {
 
     useEffect(() => {
         requestUserPermission().then()
-        setUpCallKeep().then(r => {});
         getFireBaseToken().then()
+        // setUpCallKeep().then(r => {});
     }, [])
     const getFireBaseToken =async  ()=>{
-        await messaging().registerDeviceForRemoteMessages();
+        // await messaging().registerDeviceForRemoteMessages();
         const token = await messaging().getToken();
         logToConsole({token})
         onUpateFirebaseToken(token).then()
@@ -74,41 +74,41 @@ export default function Home() {
     }
 
 
-    const setUpCallKeep= async ()=>{
-        // const initializeCallKeep = async () => {
-            try {
-                const isAvailable = await RNCallKeep.isConnectionServiceAvailable()
-                if(isAvailable){
-                    logToConsole("Connection Service Not Available")
-                    await RNCallKeep.setup({
-                    ios: {
-                        appName: 'BFF',
-                    },
-                    android: {
-                        alertTitle: 'Permissions required',
-                        alertDescription: 'This application needs to access your phone accounts',
-                        cancelButton: 'Cancel',
-                        okButton: 'ok',
-                    }
-                });
-                RNCallKeep.setAvailable(true);
-                }
-                else{
-                    logToConsole("Connection Service Not Available")
-                }
-            } catch (err) {
-                console.error('initializeCallKeep error:', err.message);
-            }
-
-        //     // Add RNCallKit Events
-        //     RNCallKeep.addEventListener('didReceiveStartCallAction', onNativeCall);
-        //     RNCallKeep.addEventListener('answerCall', onAnswerCallAction);
-        //     RNCallKeep.addEventListener('endCall', onEndCallAction);
-        //     RNCallKeep.addEventListener('didDisplayIncomingCall', onIncomingCallDisplayed);
-        //     RNCallKeep.addEventListener('didPerformSetMutedCallAction', onToggleMute);
-        //     RNCallKeep.addEventListener('didPerformDTMFAction', onDTMF);
-        // };
-    }
+    // const setUpCallKeep= async ()=>{
+    //     // const initializeCallKeep = async () => {
+    //         try {
+    //             const isAvailable = await RNCallKeep.isConnectionServiceAvailable()
+    //             if(isAvailable){
+    //                 logToConsole("Connection Service Not Available")
+    //                 await RNCallKeep.setup({
+    //                 ios: {
+    //                     appName: 'BFF',
+    //                 },
+    //                 android: {
+    //                     alertTitle: 'Permissions required',
+    //                     alertDescription: 'This application needs to access your phone accounts',
+    //                     cancelButton: 'Cancel',
+    //                     okButton: 'ok',
+    //                 }
+    //             });
+    //             RNCallKeep.setAvailable(true);
+    //             }
+    //             else{
+    //                 logToConsole("Connection Service Not Available")
+    //             }
+    //         } catch (err) {
+    //             console.error('initializeCallKeep error:', err.message);
+    //         }
+    //
+    //     //     // Add RNCallKit Events
+    //     //     RNCallKeep.addEventListener('didReceiveStartCallAction', onNativeCall);
+    //     //     RNCallKeep.addEventListener('answerCall', onAnswerCallAction);
+    //     //     RNCallKeep.addEventListener('endCall', onEndCallAction);
+    //     //     RNCallKeep.addEventListener('didDisplayIncomingCall', onIncomingCallDisplayed);
+    //     //     RNCallKeep.addEventListener('didPerformSetMutedCallAction', onToggleMute);
+    //     //     RNCallKeep.addEventListener('didPerformDTMFAction', onDTMF);
+    //     // };
+    // }
 
     async function requestUserPermission() {
         const authStatus = await messaging().requestPermission();

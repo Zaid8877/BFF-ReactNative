@@ -20,22 +20,20 @@ const ImageComponentLoader = (
     }
 ) => {
     const [isImageLoad, setIsImageLoad] = useState(false)
-    logToConsole({inOnline})
-    logToConsole({source})
     const getSourceImage = () => {
         const url = "https://bff.appnoit.com/uploads/" + source
-        logToConsole(url)
-        return {uri:url}
+        return {uri: url}
     }
     return (
         <View style={containerStyle}>
-            {!inOnline && <Image source={{uri:source.data}} style={[styles.image, containerStyle]} defaultSource={Images.placeholder}/>}
+            {!inOnline && <Image source={{uri: source.data}} style={[styles.image, containerStyle]}
+                                 defaultSource={Images.placeholder}/>}
 
-                {inOnline && <FastImage
+            {inOnline && <FastImage
                 onLoadStart={() => setIsImageLoad(true)}
                 onLoadEnd={() => setIsImageLoad(false)}
                 style={[styles.image, containerStyle]}
-                source={source ? getSourceImage(): Images.placeholder}
+                source={source ? getSourceImage() : Images.placeholder}
                 defaultSource={Images.placeholder}
             />
             }
