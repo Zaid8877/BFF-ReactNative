@@ -4,7 +4,7 @@ import {
     FlatList,
     TouchableOpacity,
     StyleSheet,
-    Image, Keyboard,
+    Image, Keyboard, Button, Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import RootView from '../../Components/RootView';
@@ -21,6 +21,7 @@ import {showToast} from "../../Utils/ToastUtils";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import {useIsFocused} from '@react-navigation/native';
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
+import {Swipeable} from "react-native-gesture-handler";
 
 const data = [
     {
@@ -39,6 +40,8 @@ export default function Contacts() {
     const [isDataLoaded, setDataLoaded] = useState(false)
     const pageSize = 10
     const isFocused = useIsFocused();
+    let row  = []
+    let prevOpenedRow;
 
     useEffect(() => {
         getContacts(false).then()
@@ -74,18 +77,101 @@ export default function Contacts() {
             showToast(message)
         }
     }
+    const {
+        onCallApi: onCallApiToDeleteContact,
+        loading: onLoadingDeleteContact,
+    } = useApiWrapper({
+        type: REQUEST_METHOD.DELETE,
+        endPoint: ApiService.contact.deleteContact
+    });
 
-    const renderItem = ({item}) => {
-        const {name, email, image, onPress} = item;
+    const onDeleteContact = async (item, index) => {
+
+        const loginResponse = await onCallApiToDeleteContact({}, '/'+item.id)
+        const {ok = false, status, data = {}} = loginResponse || {};
+        if (ok && API_STATUS.SUCCESS.includes(String(status))) {
+            setDataLoaded(true)
+            if (data.error) {
+                showToast(data.message)
+            } else {
+                deleteItem(index)
+            }
+        } else {
+            const {message = ''} = data || {};
+            showToast(message)
+        }
+    }
+
+    const renderItem = ({item, index}) => {
+        const closeRow = (index) => {
+            console.log('closerow');
+            if (prevOpenedRow && prevOpenedRow !== row[index]) {
+                prevOpenedRow.close();
+            }
+            prevOpenedRow = row[index];
+        };
+
+        const renderRightActions = (progress, dragX, onClick) => {
+            return (
+                <View
+                    style={{
+                        alignContent: 'center',
+                        justifyContent: 'center',
+                        alignItems:'center',
+                        alignSelf:'center',
+                        marginBottom:30,
+                        marginRight:15,
+                        marginLeft:15
+                    }}>
+                    <TouchableOpacity activeOpacity={0.9} onPressIn={onClick}>
+                        <Image source={Images.delete} style={{tintColor:Colors.red, width:50, height:50}}/>
+                    </TouchableOpacity>
+                </View>
+            );
+        };
+
         return (
-          <ContactsItem item={item} onPress={()=>{
-              Navigator.navigate("CallScreen",{contact:item})}
-          }/>
+            <Swipeable
+                renderRightActions={(progress, dragX) =>
+                    renderRightActions(progress, dragX, ()=>{
+                        showDeleteAlert(item,index)
+                    })
+                }
+                onSwipeableOpen={() => closeRow(index)}
+                ref={(ref) => (row[index] = ref)}
+                rightOpenValue={-100}>
+                <ContactsItem item={item} onPress={() => {
+                    Navigator.navigate("CallScreen", {contact: item})
+                }
+                }/>
+            </Swipeable>
         );
     };
 
+    const showDeleteAlert = (item, index) => {
+        Alert.alert("Confirmation","Are you sure you want to delete this icon?" ,
+            [{
+                text:"Yes",
+                onPress: ()=>{onDeleteContact(item,index)},
+                style: 'default'
+            },{
+            text:'Cancel',
+                style: 'cancel',
+                onPress:()=>{}
+            }]);
+    }
+
+    const deleteItem = ({ item, index }) => {
+        console.log(item, index);
+        let a = contacts;
+        a.splice(index, 1);
+        console.log(a);
+        setContacts([...a]);
+    };
+
+
     return (
-        <RootView statusBar={Colors.lightGrey} isLoading={onLoadingContacts}>
+        <RootView statusBar={Colors.lightGrey} isLoading={onLoadingContacts||onLoadingDeleteContact}>
             <Header secondary title="Contacts" //text='No contacts, tap "+" to add'
                     onPressRight={() => Navigator.navigate('Connect')}/>
 

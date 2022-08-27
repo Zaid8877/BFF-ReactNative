@@ -37,7 +37,7 @@ const RootView  =({
 
     }) => {
     return (
-        <KeyboardAvoidingView enabled={true} style={{flex: 1, backgroundColor: statusBar}}>
+        <KeyboardAvoidingView behavior={'padding'} enabled={true} style={{flex: 1, backgroundColor: statusBar}}>
             <StatusBar
                 translucent={true}
                 barStyle={barStyle}

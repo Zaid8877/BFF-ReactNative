@@ -40,7 +40,7 @@ export default function QRScanner() {
                 showToast(data.message)
             }
             else{
-                Navigator.goBack()
+                Navigator.navigate('Contacts')
                 // Alert.alert(APP_STRINGS.APP_NAME, data.message,[{text:APP_STRINGS.OK, style:"default", onPress: () => {Navigator.goBack()},
                 // }],{cancelable:false})
                 // showToast(data.message)

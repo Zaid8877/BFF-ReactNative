@@ -17,6 +17,7 @@ import Metrics from "../../Theme/Metrics";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import usePhotoModal from "../../Components/usePhotoModal";
 import colors from "../../Theme/Colors";
+import ImageComponentLoader from "../../Components/ImageComponentLoader";
 
 export default function CreateProfile() {
     const dispatch = useDispatch()
@@ -106,7 +107,8 @@ export default function CreateProfile() {
             }}/>
             <View style={styles.container}>
                 <TouchableOpacity style={styles.image} onPress={()=>{setIsPhotoModal(true)}}>
-                <Image defaultSource={Images.placeholder} source={{uri:image.uri}} style={styles.image}/>
+                    <ImageComponentLoader source={image} inOnline={false} containerStyle={styles.image}/>
+                {/*<Image defaultSource={Images.placeholder} source={{uri:image.data}} style={styles.image}/>*/}
                     <View style={styles.iconView}>
                         <Icon name={"upload"}
                               color="white" />

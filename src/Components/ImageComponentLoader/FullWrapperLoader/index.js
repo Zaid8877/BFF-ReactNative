@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
-    backgroundColor:colors.grey,
     alignItems: 'center',
   },
   loader: {},

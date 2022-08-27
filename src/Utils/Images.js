@@ -22,4 +22,5 @@ export default {
   endCall:require('../../assets/images/call.png'),
   speaker:require('../../assets/images/speaker_icon.png'),
   mic:require('../../assets/images/mic_icon.png'),
+  delete:require('../../assets/images/delete.png'),
 }

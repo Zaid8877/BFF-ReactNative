@@ -7,7 +7,8 @@ import {
     Image,
     ScrollView,
     StatusBar,
-    Button, PermissionsAndroid
+    Platform,
+    Button, PermissionsAndroid, Keyboard, Alert
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import RootView from '../../Components/RootView';
@@ -22,8 +23,11 @@ import NoRecordFound from "../../Components/NoRecordFoundComponent";
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 import messaging from '@react-native-firebase/messaging';
 import RNCallKeep from 'react-native-callkeep';
-import {APP_STRINGS} from "../../Constants";
+import {API_STATUS, APP_STRINGS, isIos} from "../../Constants";
 import {logToConsole} from "../../Configs/ReactotronConfig";
+import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
+import ApiService from "../../Services/ApiService";
+import {showToast} from "../../Utils/ToastUtils";
 
 export default function Home() {
     useRequestAudioHook();
@@ -33,7 +37,41 @@ export default function Home() {
     useEffect(() => {
         requestUserPermission().then()
         setUpCallKeep().then(r => {});
+        getFireBaseToken().then()
     }, [])
+    const getFireBaseToken =async  ()=>{
+        await messaging().registerDeviceForRemoteMessages();
+        const token = await messaging().getToken();
+        logToConsole({token})
+        onUpateFirebaseToken(token).then()
+    }
+    const {
+        onCallApi: onCallRegisterFirebaseToken,
+        loading: onLoadingRegisterFirebaseToken,
+    } = useApiWrapper({
+        type: REQUEST_METHOD.POST,
+        endPoint: ApiService.auth.registerDevice
+    });
+
+    const onUpateFirebaseToken = async (push_token) => {
+        Keyboard.dismiss();
+        var param={
+            platform:isIos?"ios":"android",
+            push_token:push_token
+        }
+
+        const loginResponse = await onCallRegisterFirebaseToken(param);
+        const {ok = false, status, data = {}} = loginResponse || {};
+        if (ok && API_STATUS.SUCCESS.includes(String(status))) {
+            if (data.error) {
+                showToast(data.message)
+            } else {
+            }
+        } else {
+            const {message = ''} = data || {};
+            showToast(message)
+        }
+    }
 
 
     const setUpCallKeep= async ()=>{
@@ -110,11 +148,28 @@ export default function Home() {
             {alignContent: 'flex-end', alignSelf: 'flex-end', marginVertical: 20, marginHorizontal: 20}
         }>
             <TouchableOpacity activeOpacity={0.9} onPress={() => {
-                Navigator.push("Channels", {isFromMenu: false})
+                showConfirmationAlert();
             }} style={styles.iconViewGenerateCall}>
                 <Icon name='plus' size={32} color='white'/>
             </TouchableOpacity>
         </View>
+    }
+    const showConfirmationAlert=()=>{
+        Alert.alert("Select","",
+            [{
+                text:"New Channel",
+                onPress: ()=>{
+                    Navigator.navigate("CreateChannel", {isFromMenu: false})
+                },
+                style: 'default'
+            },{
+                text:'New Contact',
+                style: 'default',
+                onPress:()=>{
+                    Navigator.navigate("Connect")
+                }
+            }],
+            {cancelable:true});
     }
     const renderListEmptyComponent = () => {
         return createChannelView()
@@ -136,7 +191,7 @@ export default function Home() {
                 {/*    </View>*/}
                 {/*</View>*/}
                 <View style={styles.textView}>
-                    <Text style={[styles.heading]}>{'Recent Channels'}</Text>
+                    <Text style={[styles.heading]}>{'Recents'}</Text>
                     {/*<Text style={[styles.text]}>{'Talk to me to test the audio'}</Text>*/}
                 </View>
             </View>

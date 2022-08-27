@@ -93,16 +93,6 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
         } else {
 
         }
-        // fetch('https://bff-test-app.herokuapp.com/rtc/' + channel_name + '/publisher/uid/' + user.id)
-        //     .then(function (response) {
-        //         response.json().then(async function (data) {
-        //             setToken(data.rtcToken)
-        //             await rtcEngine.current?.joinChannel(data.rtcToken, channel_name, null, 0);
-        //         });
-        //     })
-        //     .catch(function (err) {
-        //         console.log('Fetch Error', err);
-        //     });
     }
 
     const initAgora = useCallback(async () => {

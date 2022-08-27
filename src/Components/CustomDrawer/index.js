@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { View, Text,TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, ScrollView, Keyboard, ActivityIndicator} from 'react-native';
 import { Colors, Metrics } from '../../Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -11,6 +11,13 @@ import Navigator from '../../Utils/Navigator';
 import { useDispatch } from 'react-redux';
 import { signOut } from '../../Store/actions/user';
 import useUserState from "../../CustomHooks/useUserState";
+import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
+import ApiService from "../../Services/ApiService";
+import {API_STATUS, isIos} from "../../Constants";
+import {showToast} from "../../Utils/ToastUtils";
+import FullWrapperLoader from "../ImageComponentLoader/FullWrapperLoader";
+import colors from "../../Theme/Colors";
+import ImageComponentLoader from "../ImageComponentLoader";
 
 const { screenWidth } = Metrics;
 
@@ -53,8 +60,8 @@ const screens = [
   // }
 ]
 
-const CustomDrawerItem = ({ item, focused }) => {
-  const { name, icon, IconComponent, onPress } = item;;
+const CustomDrawerItem = ({ item, focused, showLoader }) => {
+  const { name, icon, IconComponent, onPress } = item;
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={() => onPress ? onPress() : Navigator.navigate(name)}>
       <View style={[styles.drawerItem, { backgroundColor: focused ? Colors.primary : 'white' }]}>
@@ -63,6 +70,7 @@ const CustomDrawerItem = ({ item, focused }) => {
           <Text style={[styles.drawerText, { color: focused ? 'white' : Colors.grey }]}>{name}</Text>
           {name == 'Status' ? <Text style={{ color: 'green', fontWeight: 'bold' }}>Available</Text> : null}
         </View>
+        {showLoader && <ActivityIndicator size={'small'} color={colors.primary} style={{marginRight:10}}/>}
       </View>
     </TouchableOpacity>
   )
@@ -75,6 +83,31 @@ export default function CustomDrawer(props) {
   const name= userInfo? userInfo.name:''
   const user_name= userInfo? userInfo.user_name:''
   const firstLetter= (userInfo && userInfo.name)? userInfo.name.charAt(0).toUpperCase():''
+  const image= (userInfo && userInfo.profile_pic)? userInfo.profile_pic:undefined
+  const {
+    onCallApi: onCallLogoutApi,
+    loading: onLoadingLogout,
+  } = useApiWrapper({
+    type: REQUEST_METHOD.POST,
+    endPoint: ApiService.auth.logout
+  });
+
+  const onLogout = async () => {
+    Keyboard.dismiss();
+
+    const loginResponse = await onCallLogoutApi();
+    const {ok = false, status, data = {}} = loginResponse || {};
+    if (ok && API_STATUS.SUCCESS.includes(String(status))) {
+      if (data.error) {
+        showToast(data.message)
+      } else {
+        dispatch(signOut())
+      }
+    } else {
+      const {message = ''} = data || {};
+      showToast(message)
+    }
+  }
   return (
     <View style={{
       flex: 1,
@@ -101,7 +134,12 @@ export default function CustomDrawer(props) {
                 justifyContent: 'center'
               }}
             >
-              <Text style={{ textAlign: 'center', color: Colors.light, fontSize: 36, fontWeight: 'bold' }}>{firstLetter}</Text>
+              {image && <ImageComponentLoader source={image} containerStyle={{ width: screenWidth * 0.2,
+                height: screenWidth * 0.2,
+                backgroundColor: Colors.primary,
+                borderRadius: 100,
+                justifyContent: 'center'}} />}
+              {!image && <Text style={{ textAlign: 'center', color: Colors.light, fontSize: 36, fontWeight: 'bold' }}>{firstLetter}</Text>}
             </View>
             <View style={{ marginLeft: 20, flex: 1 }}>
               <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 5, color: Colors.textDark }}>
@@ -119,8 +157,8 @@ export default function CustomDrawer(props) {
             name: 'Log Out',
             icon: 'power-off',
             IconComponent: FontAwesome,
-            onPress: () => dispatch(signOut())
-          }} />
+            onPress: () => {onLogout().then()}
+          }} showLoader={onLoadingLogout} />
 
         </ScrollView>
       </View>

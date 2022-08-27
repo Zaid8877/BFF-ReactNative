@@ -5,6 +5,8 @@ const auth = {
   verifyOTP:'/auth/verify_otp',
   updatePasswordByOTP:'/auth/update_passwoed_by_otp',
   updatePasswordByEmail:'/auth/update_pasword_by_email',
+  registerDevice:'/auth/register_device',
+  logout:'/auth/logout',
 };
 
 const user= {
