@@ -10,8 +10,6 @@ import Images from "../../Utils/Images";
 import {logToConsole} from "../../Configs/ReactotronConfig";
 
 const CallContactsItem = ({item, isSelected, peer = '', isMute = false,}) => {
-    logToConsole({isMute})
-    logToConsole({peer})
     const {name, email, profile_pic: image} = item;
 
     return (

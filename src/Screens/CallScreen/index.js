@@ -24,7 +24,6 @@ import Entypo from "react-native-vector-icons/Entypo";
 import colors from "../../Theme/Colors";
 import Images from "../../Utils/Images";
 import CallContactsItem from "../../Components/CallContactsItem/CallContactsItem";
-import {logToConsole} from "../../Configs/ReactotronConfig";
 
 
 export default function CallScreen({route}) {
@@ -42,7 +41,7 @@ export default function CallScreen({route}) {
         // else{
         //     return contactId+"_"+userId;
         // }
-        return 1212
+        return "channel_1212"
     }
     const {
         channelName,
@@ -57,7 +56,10 @@ export default function CallScreen({route}) {
         toggleIsSpeakerEnable,
         onLoadingChannels,
         peerMuted,
-    } = useInitializeAgora(contact?contact.id:channel.id, !!contact);
+    // } = useInitializeAgora(contact?contact.id:channel.id, !!contact);
+    } = useInitializeAgora(  getContactChannel());
+    // } = useInitializeAgora(    contact?"channel_"+getContactChannel(contact.id, userInfo.id): getContactChannel(channel.id));
+    // } = useInitializeAgora(    contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-"));
     //contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-")
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
     // useEffect(()=>{onJoinChannel()},[channel])
@@ -130,10 +132,10 @@ export default function CallScreen({route}) {
                         <Text style={{alignSelf: 'center', fontWeight: 'bold', marginBottom:20, fontSize: 26}}>{peerIds.length > 1 ? 'Connected' : 'Ringing'}</Text>
                     </View>
                 }
-                {channel && channel.participantsList.length > 0 &&
+                {channel && channel.participants.length > 0 &&
                     <FlatList
                         style={{padding: Metrics.defaultMargin}}
-                        data={channel.participantsList}
+                        data={channel.participants}
                         keyExtractor={item => item.id}
                         numColumns={2}
                         renderItem={({item}) => (
@@ -169,7 +171,6 @@ export default function CallScreen({route}) {
                   </TouchableOpacity> */}
                 <View style={{justifyContent:'flex-end'}}>
                     {joinSucceed && <View style={{flexDirection:'row',width:'100%',justifyContent:'space-between',alignItems:'center',  backgroundColor:colors.grey, padding:Metrics.defaultMargin}}>
-                        {logToConsole({joinSucceed})}
                         <TouchableOpacity activeOpacity={0.9} style={{borderRadius:40,padding:10, backgroundColor: isMute?colors.black:colors.transparent}} onPress={()=>{toggleIsMute()}}>
                             <Image source={Images.mic} style={[{height:30, width:30, tintColor: colors.white}]}  />
                         </TouchableOpacity>

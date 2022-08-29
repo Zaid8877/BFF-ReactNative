@@ -32,7 +32,7 @@ const ChannelDetail = ({route}) => {
         return channel.id === item.id && item.callType!=='contact'
     })
     const [channelDetail,setChannelDetail]=useState({})
-    const {participantsList} = channelDetail
+    const {participants} = channelDetail
 
     const [isDataLoaded, setDataLoaded] = useState(false)
     useEffect(() => {
@@ -58,7 +58,7 @@ const ChannelDetail = ({route}) => {
                 showToast(data.message)
             } else {
                 let channelDetail=data.channel
-                channelDetail.participantsList = data.participants
+                channelDetail.participants = data.participants
                 setChannelDetail(channelDetail)
                 // setChannels(replaceData ? data.data : channels.length === 0 ? data.data : channels.concat(data.data))
                 // setTotalRecords(data.totalRecords)
@@ -99,7 +99,7 @@ const ChannelDetail = ({route}) => {
                     {!showCallHistory &&
                         <FlatList
                             style={{paddingTop: Metrics.defaultMargin, flex:1}}
-                            data={participantsList}
+                            data={participants}
                             keyExtractor={item => item.id}
                             ListEmptyComponent={isDataLoaded ? <NoRecordFound message={"No Participant Found"}/> : null}
                             renderItem={({item}) => (

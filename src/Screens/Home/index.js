@@ -16,7 +16,7 @@ import {Colors, Metrics} from '../../Theme';
 import Images from '../../Utils/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Navigator from '../../Utils/Navigator';
-import {useInitializeAgora, useRequestAudioHook} from '../../Components/Hooks/hooks';
+import {useRequestAudioHook} from '../../Components/Hooks/hooks';
 import useRecentChannelState from "../../CustomHooks/useRecentChannelState";
 import Item from "../../Components/Item";
 import NoRecordFound from "../../Components/NoRecordFoundComponent";
@@ -122,6 +122,7 @@ export default function Home() {
     }
 
     const renderItem = ({item, index}) => {
+        logToConsole({item})
         if (item.callType === "contact") {
             return <ContactsItem
                 showIcon={false}

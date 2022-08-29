@@ -87,14 +87,15 @@ export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false
             } else {
                 setAggoraToken(data.aggora_token)
                 setAggoraUid(data.uid)
+                logToConsole({uid:data.uid})
                 const uid = Number(data.uid)
+                logToConsole({uid:uid})
+
                 setIsMute(false)
                 setIsSpeakerEnable(false)
                 setPeerMuted({id:'',isMute: false});
 
                 await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null, uid);
-                // const etcjannelReward = await rtcEngine.current?.joinChannel(data.aggora_token/*, channel_name, null, data.uid*/);
-                // logToConsole({etcjannelReward})
             }
         } else {
 
@@ -162,7 +163,6 @@ export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false
         rtcEngine.current?.addListener('UserOffline', (uid, reason) => {
             console.log('UserOffline', uid, reason);
             const remainingPears = peerIds.filter((id) => id !== uid)
-            logToConsole({remainingPears, length: remainingPears.length})
             if (remainingPears.length === 0) {
                 leaveChannel()
             }
@@ -176,7 +176,6 @@ export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false
         rtcEngine.current?.addListener(
             'JoinChannelSuccess',
             (channel, uid, elapsed) => {
-                logToConsole({channel: channel, id: uid, passed: elapsed});
 
                 setJoinSucceed(true);
 
@@ -201,15 +200,15 @@ export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false
 
     const joinChannel = useCallback(async () => {
         if (peerIds.length === 5) {
-            alert('Channel Maximun Limit Reached')
+            alert('Channel Maximum Limit Reached')
         } else {
             // rtcEngine.current.pauseAllChannelMediaRelay()
-            if(joinCall){
+            // if(joinCall){
                 await getTokenFromServer()
-            }
-            else {
-                await getTokenAndSendPushFromServer()
-            }
+            // }
+            // else {
+            //     await getTokenAndSendPushFromServer()
+            // }
             // await getTokenFromServer().then()
             // await rtcEngine.current?.joinChannel(token, channel_name, null, 0);
         }

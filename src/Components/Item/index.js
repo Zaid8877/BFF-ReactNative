@@ -9,10 +9,15 @@ export default function Item({item, onPress=()=>{},selected=false,style,showIcon
   const {channel_name, participants, image, id} = item;
   const getParticipantsName = ()=>{
     var parts = ''
-    participants.map(item=>{
-      parts+=item.name+', '
-    })
-    return parts.substring(0, parts.length-2)
+    // if(typeof participants === Array) {
+      participants.map(item => {
+        parts += item.name + ', '
+      })
+      return parts.substring(0, parts.length - 2)
+    // }
+    // else{
+    //   return participants
+    // }
   }
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={() => onPress(id)}>
