@@ -7,6 +7,13 @@ import {screenWidth} from '../../Theme/Metrics'
 
 export default function Item({item, onPress=()=>{},selected=false,style,showIcon}) {
   const {channel_name, participants, image, id} = item;
+  const getParticipantsName = ()=>{
+    var parts = ''
+    participants.map(item=>{
+      parts+=item.name+', '
+    })
+    return parts.substring(0, parts.length-2)
+  }
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={() => onPress(id)}>
       <View
@@ -40,7 +47,7 @@ export default function Item({item, onPress=()=>{},selected=false,style,showIcon
               styles.text,
               {color: selected ? 'white' : Colors.textDark},
             ]}>
-            {participants}
+            {getParticipantsName()}
           </Text>
         </View>
       </View>

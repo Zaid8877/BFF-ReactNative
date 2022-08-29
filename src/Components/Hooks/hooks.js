@@ -43,7 +43,7 @@ export const useRequestAudioHook = () => {
 //     logToConsole({token})
 //     return token
 // }
-export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNotification = false) => {
+export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false,joinCall = false) => {
     const user = useUserState()
     // Replace yourAppId with the App ID of your Agora project.
     const appId = agoraAppId;
@@ -60,20 +60,54 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
     const [isSpeakerEnable, setIsSpeakerEnable] = useState(true);
     const [peerMuted, setPeerMuted] = useState({id:'', isMute:false});
     const rtcEngine = useRef(null);
-
     const {
         onCallApi: onCallApiToGetToken,
-        loading: onLoadingChannels,
+        loading: onLoadingToken,
     } = useApiWrapper({
         type: REQUEST_METHOD.GET,
         endPoint: ApiService.aggora.getToken
     });
-
+    const {
+        onCallApi: onCallAPITokenAndGenratePush,
+        loading: onLoadingTokenWithPush,
+    } = useApiWrapper({
+        type: REQUEST_METHOD.POST,
+        endPoint: ApiService.aggora.getTokenAndPush
+    });
+    const onLoadingChannels=onLoadingToken || onLoadingTokenWithPush
 
     const getTokenFromServer = async () => {
         // https://bff-test-app.herokuapp.com/rtc/channel-test/publisher/uid/0/?expiry=60
 
         const response = await onCallApiToGetToken({channel_name: channel_name},);
+        const {ok = false, status, data = {}} = response || {};
+        if (ok && API_STATUS.SUCCESS.includes(String(status))) {
+            if (data.error) {
+                showToast(data.message)
+            } else {
+                setAggoraToken(data.aggora_token)
+                setAggoraUid(data.uid)
+                const uid = Number(data.uid)
+                setIsMute(false)
+                setIsSpeakerEnable(false)
+                setPeerMuted({id:'',isMute: false});
+
+                await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null, uid);
+                // const etcjannelReward = await rtcEngine.current?.joinChannel(data.aggora_token/*, channel_name, null, data.uid*/);
+                // logToConsole({etcjannelReward})
+            }
+        } else {
+
+        }
+    }
+    const getTokenAndSendPushFromServer = async () => {
+        // https://bff-test-app.herokuapp.com/rtc/channel-test/publisher/uid/0/?expiry=60
+
+        let params  = {
+            channel_or_contact_id: channel_name,
+            is_contact:isContact
+        }
+        const response = await onCallAPITokenAndGenratePush(params);
         const {ok = false, status, data = {}} = response || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
             if (data.error) {
@@ -170,7 +204,13 @@ export const useInitializeAgora = (channel_name = 'my-channel', isOpenedFromNoti
             alert('Channel Maximun Limit Reached')
         } else {
             // rtcEngine.current.pauseAllChannelMediaRelay()
-            await getTokenFromServer().then()
+            if(joinCall){
+                await getTokenFromServer()
+            }
+            else {
+                await getTokenAndSendPushFromServer()
+            }
+            // await getTokenFromServer().then()
             // await rtcEngine.current?.joinChannel(token, channel_name, null, 0);
         }
 

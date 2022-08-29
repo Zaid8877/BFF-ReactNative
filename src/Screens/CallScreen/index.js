@@ -57,7 +57,8 @@ export default function CallScreen({route}) {
         toggleIsSpeakerEnable,
         onLoadingChannels,
         peerMuted,
-    } = useInitializeAgora(contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-"));
+    } = useInitializeAgora(contact?contact.id:channel.id, !!contact);
+    //contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-")
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
     // useEffect(()=>{onJoinChannel()},[channel])
 
