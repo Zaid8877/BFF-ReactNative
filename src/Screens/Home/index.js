@@ -156,7 +156,14 @@ export default function Home() {
     }
     const showConfirmationAlert=()=>{
         Alert.alert("Select","",
-            [{
+            [
+                {
+                    text:'Cancel',
+                    style: 'default',
+                    onPress:()=>{
+                    }
+                },
+                {
                 text:"New Channel",
                 onPress: ()=>{
                     Navigator.navigate("CreateChannel", {isFromMenu: false})
@@ -168,7 +175,7 @@ export default function Home() {
                 onPress:()=>{
                     Navigator.navigate("Connect")
                 }
-            }],
+            },],
             {cancelable:true});
     }
     const renderListEmptyComponent = () => {
