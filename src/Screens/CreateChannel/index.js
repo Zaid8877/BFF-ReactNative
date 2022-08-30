@@ -14,8 +14,14 @@ import SelectContactsBottomSheet from "../../Components/SelectContactsBottomShee
 import {REQUEST_METHOD, useApiWrapper} from "../../CustomHooks/useApiWrapper";
 import ApiService from "../../Services/ApiService";
 import {showToast} from "../../Utils/ToastUtils";
+import {logToConsole} from "../../Configs/ReactotronConfig";
+import channels from "../Channels";
+import colors from "../../Theme/Colors";
 
-export default function CreateChannel() {
+const CreateChannel=({route})=> {
+    const {channel}=route.params
+    const isEditingChannel=channel!==null
+    logToConsole({isEditingChannel})
     const [isCreateChannelFilled, setIsCreateChannelFilled] = useState(false);
     const [showListContacts, setShowListContacts] = useState(false);
     const [channelName, setChannelName] = useState('')
@@ -28,12 +34,20 @@ export default function CreateChannel() {
         validateFields()
     }, [channelName, participantsText])
 
+    useEffect(()=>{
+        if(isEditingChannel){
+            setChannelName(channel.channel_name)
+            setParticipants(channel.participants)
+            setParticipantText(getContactName(channel.participants))
+
+        }
+    },[])
     const {
         onCallApi: onCallCreateChannel,
         loading: onCreatingChannel,
     } = useApiWrapper({
         type: REQUEST_METHOD.POST,
-        endPoint: ApiService.channels.create
+        endPoint: isEditingChannel?ApiService.channels.update:ApiService.channels.create
     });
 
     const onCreateChannel = async () => {
@@ -42,6 +56,9 @@ export default function CreateChannel() {
             channel_name:channelName.trim(),
             participants:getContactIds().trim(),
         };
+        if(isEditingChannel){
+            params.channel_id=channel.id
+        }
         const loginResponse = await onCallCreateChannel(params);
         const {ok = false, status, data = {}} = loginResponse || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
@@ -66,7 +83,8 @@ export default function CreateChannel() {
 
     const renderBottomSheet = () => {
         return <SelectContactsBottomSheet
-            isVisible={showListContacts} selectedContacts={participants}
+            isVisible={showListContacts}
+            selectedContacts={participants}
             onBackKeyPress={() => {
                 setShowListContacts(false)
             }} onDoneButtonPressed={(contacts) => {
@@ -96,11 +114,13 @@ export default function CreateChannel() {
     return (
         <RootView statusBar={Colors.lightGrey} isLoading={onCreatingChannel}>
 
-            <Header secondary title='Create Channel' showAddIcon={false} leftIcon='chevron-left'
+            <Header secondary title={isEditingChannel?'Edit Channel':'Create Channel'} showAddIcon={false} leftIcon='chevron-left'
                     onPressLeft={() => Navigator.goBack()}/>
             <View style={{padding: Metrics.defaultMargin}}>
                 <Input
                     value={channelName}
+                    editable={!isEditingChannel}
+                    style={isEditingChannel? {color:colors.grey}:{}}
                     onChangeText={(val) => setChannelName(val)}
                     placeholder='Channel Name'
                     keyboardType='default'
@@ -118,7 +138,7 @@ export default function CreateChannel() {
                         icon='arrow-down'
                     />
                 </TouchableOpacity>
-                <Button text='Create Channel' disabled={isCreateChannelFilled}
+                <Button text={isEditingChannel?'Update':'Create Channel'} disabled={isCreateChannelFilled}
                         onPress={() => onCreateChannel().then()}/>
             </View>
             {renderBottomSheet()}
@@ -145,3 +165,4 @@ const styles = StyleSheet.create({
         width: '45%'
     }
 })
+export default CreateChannel

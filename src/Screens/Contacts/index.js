@@ -23,17 +23,12 @@ import {useIsFocused} from '@react-navigation/native';
 import ContactsItem from "../../Components/ContactsItem/ContactsItem";
 import {Swipeable} from "react-native-gesture-handler";
 
-const data = [
-    {
-        image: Images.soundWaves,
-        title: 'Echo',
-        text: 'Talk to me to test audio',
-        id: 0,
-        onPress: () => Navigator.navigate('RecordAudio')
-    },
-];
-
+import {useDispatch} from "react-redux";
+import {setRecentChannel} from '../../Store/actions/RecentChannelActions'
+import useRecentChannelState from "../../CustomHooks/useRecentChannelState";
 export default function Contacts() {
+    const dispatch= useDispatch()
+
     const [page, setPage] = useState(1)
     const [contacts, setContacts] = useState([])
     const [totalRecords, setTotalRecords] = useState(0)
@@ -94,7 +89,8 @@ export default function Contacts() {
             if (data.error) {
                 showToast(data.message)
             } else {
-                deleteItem(index)
+                deleteContactFromRecents(item)
+                deleteItem(item,index)
             }
         } else {
             const {message = ''} = data || {};
@@ -160,8 +156,22 @@ export default function Contacts() {
                 onPress:()=>{}
             }]);
     }
+const deleteContactFromRecents=(item)=>{
+    let recentCalls = useRecentChannelState();
 
-    const deleteItem = ({ item, index }) => {
+    let arr = []
+    recentCalls.map((itemChannel,index)=>{
+        if(itemChannel.callType === "contact" && item.id === itemChannel.id){
+        }
+        else{
+            arr.push(itemChannel)
+        }
+
+    })
+
+    dispatch(setRecentChannel(arr))
+}
+    const deleteItem = (item, index) => {
         console.log(item, index);
         let a = contacts;
         a.splice(index, 1);

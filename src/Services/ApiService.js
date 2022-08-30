@@ -25,7 +25,7 @@ const channels={
   getChannelDetail:'/channel/get_by_id',//?page_no=1&page_size=10
   create:'/channel/create',
   update:'/channel/update',
-  delete:'channel/delete',///{id}
+  delete:'/channel/delete',///{id}
 }
 const aggora = {
   getToken:'/aggora/get_token', //channel_name=test

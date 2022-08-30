@@ -25,6 +25,7 @@ import {Metrics} from "../../Theme";
 import colors from "../../Theme/Colors";
 import ContactsItem from "../ContactsItem/ContactsItem";
 import Button from "../Button";
+import {logToConsole} from "../../Configs/ReactotronConfig";
 
 
 const SelectedContactsBottomSheet = ({isVisible, selectedContacts, onBackKeyPress, onDoneButtonPressed}) => {
@@ -61,7 +62,9 @@ const SelectedContactsBottomSheet = ({isVisible, selectedContacts, onBackKeyPres
                 let newContacts = data.data
                 newContacts.map((item, index) => {
                     selectedContacts.map(selectedItem => {
-                        newContacts[index].isSelected = (item.id === selectedItem.id);
+                        logToConsole({item:item.id,selected:selectedItem.id})
+                        if (item.id === selectedItem.id)
+                        newContacts[index].isSelected = true;
                     })
                 })
                 setContacts(newContacts)
