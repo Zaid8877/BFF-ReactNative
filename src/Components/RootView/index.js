@@ -53,6 +53,25 @@ const RootView  =({
                             backgroundColor: background,
                             ...style,
                         }}>
+
+                        {showCircle && <View style={[{
+                            position: 'absolute',
+                            bottom: -screenWidth * 0.6,
+                            width: screenWidth,
+                            height: screenWidth,
+                            backgroundColor: Colors.primary,
+                            opacity: lightCircle ? 0.2 : 1,
+                            borderRadius: screenWidth,
+                            shadowColor: Colors.primary,
+                            shadowOffset: {
+                                width: 10,
+                                height: 10,
+                            },
+                            shadowOpacity: 0.8,
+                            shadowRadius: 24.00,
+                            elevation: 24,
+                        }, rightCircle ? {right: -screenWidth * 0.4} : {left: -screenWidth * 0.4}]}/>}
+
                         {children}
                         {hasSpinner && (
                             <Spinner
@@ -64,23 +83,7 @@ const RootView  =({
                     </View>
                 )}
             </SafeAreaInsetsContext.Consumer>
-            {showCircle && <View style={[{
-                position: 'absolute',
-                bottom: -screenWidth * 0.6,
-                width: screenWidth,
-                height: screenWidth,
-                backgroundColor: Colors.primary,
-                opacity: lightCircle ? 0.2 : 1,
-                borderRadius: screenWidth,
-                shadowColor: Colors.primary,
-                shadowOffset: {
-                    width: 10,
-                    height: 10,
-                },
-                shadowOpacity: 0.8,
-                shadowRadius: 24.00,
-                elevation: 24,
-            }, rightCircle ? {right: -screenWidth * 0.4} : {left: -screenWidth * 0.4}]}/>}
+
         </KeyboardAvoidingView>
     );
 }

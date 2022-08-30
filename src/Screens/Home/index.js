@@ -156,28 +156,53 @@ export default function Home() {
         </View>
     }
     const showConfirmationAlert=()=>{
-        Alert.alert("Select","",
-            [
-                {
-                    text:'Cancel',
+        if(isIos){
+            Alert.alert("Select","",
+                [
+                    {
+                        text:"New Channel",
+                        onPress: ()=>{
+                            Navigator.navigate("CreateChannel", {isFromMenu: false})
+                        },
+                        style: 'default'
+                    },{
+                    text:'New Contact',
                     style: 'default',
                     onPress:()=>{
+                        Navigator.navigate("Connect")
                     }
-                },
-                {
-                text:"New Channel",
-                onPress: ()=>{
-                    Navigator.navigate("CreateChannel", {isFromMenu: false})
-                },
-                style: 'default'
-            },{
-                text:'New Contact',
-                style: 'default',
-                onPress:()=>{
-                    Navigator.navigate("Connect")
-                }
-            },],
-            {cancelable:true});
+                    }, {
+                        text:'Cancel',
+                        style: 'default',
+                        onPress:()=>{
+                    }
+                }],
+                {cancelable:true});
+        }
+        else {
+            Alert.alert("Select", "",
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'default',
+                        onPress: () => {
+                        }
+                    },
+                    {
+                        text: "New Channel",
+                        onPress: () => {
+                            Navigator.navigate("CreateChannel", {isFromMenu: false})
+                        },
+                        style: 'default'
+                    }, {
+                    text: 'New Contact',
+                    style: 'default',
+                    onPress: () => {
+                        Navigator.navigate("Connect")
+                    }
+                },],
+                {cancelable: true});
+        }
     }
     const renderListEmptyComponent = () => {
         return createChannelView()
