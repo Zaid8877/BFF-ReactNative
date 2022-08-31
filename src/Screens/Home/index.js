@@ -42,7 +42,6 @@ export default function Home() {
     const getFireBaseToken =async  ()=>{
         // await messaging().registerDeviceForRemoteMessages();
         const token = await messaging().getToken();
-        logToConsole({token})
         onUpateFirebaseToken(token).then()
     }
     const {
@@ -122,7 +121,6 @@ export default function Home() {
     }
 
     const renderItem = ({item, index}) => {
-        logToConsole({item})
         if (item.callType === "contact") {
             return <ContactsItem
                 showIcon={false}
@@ -146,7 +144,7 @@ export default function Home() {
 
     const createChannelView = () => {
         return <View style={
-            {alignContent: 'flex-end', alignSelf: 'flex-end', marginVertical: 20, marginHorizontal: 20}
+            {position:'absolute', bottom:20, right:10,  marginVertical: 20, marginHorizontal: 20}
         }>
             <TouchableOpacity activeOpacity={0.9} onPress={() => {
                 showConfirmationAlert();

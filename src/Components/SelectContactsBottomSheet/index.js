@@ -62,7 +62,6 @@ const SelectedContactsBottomSheet = ({isVisible, selectedContacts, onBackKeyPres
                 let newContacts = data.data
                 newContacts.map((item, index) => {
                     selectedContacts.map(selectedItem => {
-                        logToConsole({item:item.id,selected:selectedItem.id})
                         if (item.id === selectedItem.id)
                         newContacts[index].isSelected = true;
                     })

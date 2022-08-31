@@ -43,7 +43,7 @@ export const useRequestAudioHook = () => {
 //     logToConsole({token})
 //     return token
 // }
-export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false,joinCall = false) => {
+export const useInitializeAgora = ( channel_name = '', isContact=false,joinCall = false) => {
     const user = useUserState()
     // Replace yourAppId with the App ID of your Agora project.
     const appId = agoraAppId;
@@ -53,7 +53,7 @@ export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false
     // '006ed3824ee1946496faddd7abde731c1c2IADawTPNWer1xA5PeSnIDlYUmh0gnu35sjEiAJxf2/wp0Ya0dcYAAAAAEAArT8zLxSS8YgEAAQDEJLxi'
     // '0061af140d1d92848d4a4f315e62e37727bIAB+fGiaLhFQO3PXJPVULfFjNcwWEn6Jp0We13gBM2/eQYa0dcYAAAAAEABVr+ww+rO+XwEAAQD6s75f';
 
-    const [channelName, setChannelName] = useState(channel_name);
+    const [channelName, setChannelName] = useState('my-channel');
     const [joinSucceed, setJoinSucceed] = useState(false);
     const [peerIds, setPeerIds] = useState([]);
     const [isMute, setIsMute] = useState(false);
@@ -87,12 +87,9 @@ export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false
             } else {
                 setAggoraToken(data.aggora_token)
                 setAggoraUid(data.uid)
-                logToConsole({uid:data.uid})
                 const uid = Number(data.uid)
-                logToConsole({uid:uid})
-
-                setIsMute(false)
-                setIsSpeakerEnable(false)
+                // setIsMute(false)
+                // setIsSpeakerEnable(false)
                 setPeerMuted({id:'',isMute: false});
 
                 await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null, uid);
@@ -106,7 +103,8 @@ export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false
 
         let params  = {
             channel_or_contact_id: channel_name,
-            is_contact:isContact
+            is_contact:isContact+"",
+            isHost:"true"
         }
         const response = await onCallAPITokenAndGenratePush(params);
         const {ok = false, status, data = {}} = response || {};
@@ -114,14 +112,14 @@ export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false
             if (data.error) {
                 showToast(data.message)
             } else {
+                logToConsole({data})
                 setAggoraToken(data.aggora_token)
                 setAggoraUid(data.uid)
                 const uid = Number(data.uid)
-                setIsMute(false)
-                setIsSpeakerEnable(false)
-                setPeerMuted({id:'',isMute: false});
+                setChannelName(data.channel_name)
 
-                await rtcEngine.current?.joinChannel(data.aggora_token, channel_name, null, uid);
+                logToConsole({token:data.aggora_token, channelName:data.channel_name, uid})
+                await rtcEngine.current?.joinChannel(data.aggora_token, data.channel_name, null, uid);
                 // const etcjannelReward = await rtcEngine.current?.joinChannel(data.aggora_token/*, channel_name, null, data.uid*/);
                 // logToConsole({etcjannelReward})
             }
@@ -199,6 +197,11 @@ export const useInitializeAgora = ( channel_name = 'my-channel', isContact=false
     }, []);
 
     const joinChannel = useCallback(async () => {
+
+        // setIsMute(false)
+        // setIsSpeakerEnable(false)
+        // setPeerMuted({id:'',isMute: false});
+
         if (peerIds.length === 5) {
             alert('Channel Maximum Limit Reached')
         } else {

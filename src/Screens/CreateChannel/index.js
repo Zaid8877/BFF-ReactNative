@@ -21,7 +21,6 @@ import colors from "../../Theme/Colors";
 const CreateChannel=({route})=> {
     const {channel}=route.params
     const isEditingChannel=channel!==null
-    logToConsole({isEditingChannel})
     const [isCreateChannelFilled, setIsCreateChannelFilled] = useState(false);
     const [showListContacts, setShowListContacts] = useState(false);
     const [channelName, setChannelName] = useState('')

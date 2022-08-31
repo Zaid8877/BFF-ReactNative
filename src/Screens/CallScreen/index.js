@@ -24,6 +24,7 @@ import Entypo from "react-native-vector-icons/Entypo";
 import colors from "../../Theme/Colors";
 import Images from "../../Utils/Images";
 import CallContactsItem from "../../Components/CallContactsItem/CallContactsItem";
+import CallDurationComponent from "../../Components/CallDurationComponent";
 
 
 export default function CallScreen({route}) {
@@ -68,6 +69,9 @@ export default function CallScreen({route}) {
     const onJoinChannel = ()=>{
           joinChannel().then(item=>{
         })
+        if(isSpeakerEnable){
+            toggleIsSpeakerEnable()
+        }
         const callType=contact?"contact":"channel"
         const dataToSave = contact?contact:channel
         dataToSave.callType=callType
@@ -132,6 +136,7 @@ export default function CallScreen({route}) {
                         <Text style={{alignSelf: 'center', fontWeight: 'bold', marginBottom:20, fontSize: 26}}>{peerIds.length > 1 ? 'Connected' : 'Ringing'}</Text>
                     </View>
                 }
+                <CallDurationComponent joinSucceded={joinSucceed}/>
                 {channel && channel.participants.length > 0 &&
                     <FlatList
                         style={{padding: Metrics.defaultMargin}}

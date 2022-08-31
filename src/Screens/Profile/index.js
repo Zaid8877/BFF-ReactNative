@@ -104,7 +104,6 @@ export default function Profile() {
       showToast(message)
     }
   }
-  {logToConsole({updateProfileLoading})}
   return (
     <RootView isLoading={updateProfileLoading}>
       <Header title={userInfo.name}  />
