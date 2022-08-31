@@ -1,20 +1,22 @@
 import "react-native-gesture-handler";
 import * as React from "react";
 import AuthLoading from "./src/Navigation"
-import { Provider } from "react-redux";
-import { PersistGate } from 'redux-persist/lib/integration/react';
-import { store, persistor } from './src/Store'
-import { RootSiblingParent } from 'react-native-root-siblings';
-import {LogBox} from 'react-native'
+import {Provider} from "react-redux";
+import {PersistGate} from 'redux-persist/lib/integration/react';
+import {store, persistor} from './src/Store'
+import {RootSiblingParent} from 'react-native-root-siblings';
+import {Alert, LogBox} from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import {useEffect} from "react";
 import RNCallKeep from "react-native-callkeep";
 import {logToConsole} from "./src/Configs/ReactotronConfig";
 import crashlytics from '@react-native-firebase/crashlytics';
 import messaging from "@react-native-firebase/messaging";
+import Navigator from "./src/Utils/Navigator";
+import useUserState from "./src/CustomHooks/useUserState";
 
 export default function App() {
-  LogBox.ignoreAllLogs()
+    LogBox.ignoreAllLogs()
     useEffect(() => {
         /**
          * When a notification from FCM has triggered the application
@@ -50,9 +52,11 @@ export default function App() {
                     'Notification caused app to open from background state',
                 );
                 console.log(remoteMessage);
-                alert(
-                    'onNotificationOpenedApp: Notification caused app to open from background state',
-                );
+                //
+                // alert(
+                //     'onNotificationOpenedApp: Notification caused app to open from background state',
+                // );
+                showAlertForCall(remoteMessage)
             }
         });
 
@@ -64,6 +68,8 @@ export default function App() {
          */
         messaging().setBackgroundMessageHandler(async (remoteMessage) => {
             console.log('Message handled in the background!', remoteMessage);
+            showAlertForCall(remoteMessage)
+
         });
 
         /**
@@ -72,8 +78,11 @@ export default function App() {
          * for new messages.
          */
         const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-            alert('A new FCM message arrived!');
-            console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+            // const userInfo=useUserState()
+            // if (userInfo && userInfo.token) {
+               showAlertForCall(remoteMessage)
+                console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+            // }
         });
 
         /**
@@ -90,14 +99,45 @@ export default function App() {
         };
     }, []);
 
-    useEffect(()=>{
+    const showAlertForCall = (remoteMessage)=>{
+        let data = remoteMessage.data
+        Alert.alert("Call", data.title + " " + data.body,
+            [
+                {
+                    text: "Answer",
+                    style: "default",
+                    onPress: () => {
+                        let json = JSON.parse(data.json_data)
+                        var param={isCallRecieved:true}
+                        if(json.call_type === 'channel'){
+                            let channel = json.channel
+                            channel.participants = json.participants
+                            param.channel=channel
+                        }
+                        else{
+                            param.contact=json.contact
+                        }
+                        logToConsole(param)
+                        Navigator.navigate("CallScreen", param)
+                    }
+                }, {
+                text: "Reject",
+                style: "default",
+                onPress: () => {
+                }
+            },
+            ]
+        );
+    }
+
+    useEffect(() => {
         setUpCallKeep().then()
-    },[])
-    const setUpCallKeep= async ()=>{
+    }, [])
+    const setUpCallKeep = async () => {
         try {
             const isAvailable = await RNCallKeep.isConnectionServiceAvailable()
-            if(isAvailable){
-                logToConsole("Connection Service Not Available")
+            if (isAvailable) {
+                logToConsole("Connection Service Available")
                 await RNCallKeep.setup({
                     ios: {
                         appName: 'BFF',
@@ -110,8 +150,7 @@ export default function App() {
                     }
                 });
                 RNCallKeep.setAvailable(true);
-            }
-            else{
+            } else {
                 logToConsole("Connection Service Not Available")
             }
         } catch (err) {
@@ -119,30 +158,30 @@ export default function App() {
         }
 
         //     // Add RNCallKit Events
-            RNCallKeep.addEventListener('didReceiveStartCallAction', onNativeCall);
-            RNCallKeep.addEventListener('answerCall', onAnswerCallAction);
-            RNCallKeep.addEventListener('endCall', onEndCallAction);
-            RNCallKeep.addEventListener('didDisplayIncomingCall', onIncomingCallDisplayed);
-            RNCallKeep.addEventListener('didPerformSetMutedCallAction', onToggleMute);
-            RNCallKeep.addEventListener('didPerformDTMFAction', onDTMF);
+        RNCallKeep.addEventListener('didReceiveStartCallAction', onNativeCall);
+        RNCallKeep.addEventListener('answerCall', onAnswerCallAction);
+        RNCallKeep.addEventListener('endCall', onEndCallAction);
+        RNCallKeep.addEventListener('didDisplayIncomingCall', onIncomingCallDisplayed);
+        RNCallKeep.addEventListener('didPerformSetMutedCallAction', onToggleMute);
+        RNCallKeep.addEventListener('didPerformDTMFAction', onDTMF);
         // };
     }
-    const onNativeCall=()=>{
-      logToConsole("onNativeCall")
+    const onNativeCall = () => {
+        logToConsole("onNativeCall")
     }
-    const onAnswerCallAction=()=>{
+    const onAnswerCallAction = () => {
         logToConsole("onAnswerCallAction")
     }
-    const onEndCallAction=()=>{
+    const onEndCallAction = () => {
         logToConsole("onEndCallAction")
     }
-    const onIncomingCallDisplayed=()=>{
+    const onIncomingCallDisplayed = () => {
         logToConsole("onIncomingCallDisplayed")
     }
-    const onToggleMute=()=>{
+    const onToggleMute = () => {
         logToConsole("onToggleMute")
     }
-    const onDTMF=()=>{
+    const onDTMF = () => {
         logToConsole("onDTMF")
     }
 
@@ -158,13 +197,13 @@ export default function App() {
                 crashlytics().log('App mounted.');
             });
     };
-  return (
-    <RootSiblingParent>
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <AuthLoading />
-        </PersistGate>
-      </Provider>
-    </RootSiblingParent>
-  );
+    return (
+        <RootSiblingParent>
+            <Provider store={store}>
+                <PersistGate persistor={persistor}>
+                    <AuthLoading/>
+                </PersistGate>
+            </Provider>
+        </RootSiblingParent>
+    );
 }

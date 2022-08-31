@@ -28,6 +28,7 @@ import {setRecentChannel} from '../../Store/actions/RecentChannelActions'
 import useRecentChannelState from "../../CustomHooks/useRecentChannelState";
 export default function Contacts() {
     const dispatch= useDispatch()
+    let recentCalls = useRecentChannelState();
 
     const [page, setPage] = useState(1)
     const [contacts, setContacts] = useState([])
@@ -76,7 +77,7 @@ export default function Contacts() {
         onCallApi: onCallApiToDeleteContact,
         loading: onLoadingDeleteContact,
     } = useApiWrapper({
-        type: REQUEST_METHOD.DELETE,
+        type: REQUEST_METHOD.GET,
         endPoint: ApiService.contact.deleteContact
     });
 
@@ -89,6 +90,7 @@ export default function Contacts() {
             if (data.error) {
                 showToast(data.message)
             } else {
+                showToast(data.message)
                 deleteContactFromRecents(item)
                 deleteItem(item,index)
             }
@@ -157,7 +159,6 @@ export default function Contacts() {
             }]);
     }
 const deleteContactFromRecents=(item)=>{
-    let recentCalls = useRecentChannelState();
 
     let arr = []
     recentCalls.map((itemChannel,index)=>{

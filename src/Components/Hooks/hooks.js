@@ -206,14 +206,13 @@ export const useInitializeAgora = ( channel_name = '', isContact=false,joinCall 
             alert('Channel Maximum Limit Reached')
         } else {
             // rtcEngine.current.pauseAllChannelMediaRelay()
-            // if(joinCall){
+            if(joinCall){
                 await getTokenFromServer()
-            // }
-            // else {
-            //     await getTokenAndSendPushFromServer()
-            // }
-            // await getTokenFromServer().then()
-            // await rtcEngine.current?.joinChannel(token, channel_name, null, 0);
+            }
+            else {
+                await getTokenAndSendPushFromServer()
+            }
+            await getTokenFromServer().then()
         }
 
     }, [channelName]);
