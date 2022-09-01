@@ -23,6 +23,7 @@ import {setRecentChannel} from '../../Store/actions/RecentChannelActions'
 import {useIsFocused} from "@react-navigation/native";
 
 const ChannelDetail = ({route}) => {
+    let recentCalls = useRecentChannelState();
     const dispatch= useDispatch()
     const {channel} = route.params
     const chanelHistory = useRecentChannelState().filter(item => {
@@ -48,7 +49,7 @@ const ChannelDetail = ({route}) => {
         onCallApi: onCallApiToDeleteChannel,
         loading: onDeletingChannel,
     } = useApiWrapper({
-        type: REQUEST_METHOD.DELETE,
+        type: REQUEST_METHOD.POST,
         endPoint: ApiService.channels.delete
     });
     const getChannels = async () => {
@@ -76,7 +77,10 @@ const ChannelDetail = ({route}) => {
     const onDeleteChannel = async () => {
         Keyboard.dismiss();
 
-        const loginResponse = await onCallApiToDeleteChannel({}, '/'+channel.id);
+        const param={
+            channel_id: channel.id
+        }
+        const loginResponse = await onCallApiToDeleteChannel(param);
         const {ok = false, status, data = {}} = loginResponse || {};
         setDataLoaded(true)
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
@@ -91,7 +95,7 @@ const ChannelDetail = ({route}) => {
                             text:"Ok",
                             style:'default',
                             onPress:()=>{
-
+                                Navigator.goBack()
                             }
                         }
                         ],
@@ -104,8 +108,6 @@ const ChannelDetail = ({route}) => {
         }
     }
     const deleteChannelFromRecent=()=>{
-        let recentCalls = useRecentChannelState();
-
         let arr = []
          recentCalls.map((itemChannel,index)=>{
                 if(itemChannel.callType === "channel" && channel.id === itemChannel.id){

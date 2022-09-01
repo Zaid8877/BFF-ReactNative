@@ -77,13 +77,16 @@ export default function Contacts() {
         onCallApi: onCallApiToDeleteContact,
         loading: onLoadingDeleteContact,
     } = useApiWrapper({
-        type: REQUEST_METHOD.GET,
+        type: REQUEST_METHOD.POST,
         endPoint: ApiService.contact.deleteContact
     });
 
     const onDeleteContact = async (item, index) => {
 
-        const loginResponse = await onCallApiToDeleteContact({}, '/'+item.id)
+        const param={
+            contact_id: item.id
+        }
+        const loginResponse = await onCallApiToDeleteContact(param)
         const {ok = false, status, data = {}} = loginResponse || {};
         if (ok && API_STATUS.SUCCESS.includes(String(status))) {
             setDataLoaded(true)

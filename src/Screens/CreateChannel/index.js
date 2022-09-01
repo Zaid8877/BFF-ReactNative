@@ -19,8 +19,10 @@ import channels from "../Channels";
 import colors from "../../Theme/Colors";
 
 const CreateChannel=({route})=> {
-    const {channel}=route.params
-    const isEditingChannel=channel!==null
+    const {channel}=route.params ?? {}
+    const isEditingChannel=!!channel
+    console.warn(isEditingChannel)
+    console.warn(!!channel)
     const [isCreateChannelFilled, setIsCreateChannelFilled] = useState(false);
     const [showListContacts, setShowListContacts] = useState(false);
     const [channelName, setChannelName] = useState('')
@@ -88,8 +90,18 @@ const CreateChannel=({route})=> {
                 setShowListContacts(false)
             }} onDoneButtonPressed={(contacts) => {
             setShowListContacts(false)
-            setParticipants(contacts)
-            setParticipantText(getContactName(contacts))
+            // var newContact = contacts
+            if(isEditingChannel) {
+                var newContact = participants.concat(contacts.filter((item, index) => {
+                    return participants.indexOf(item) === index
+                }))
+                setParticipants(newContact)
+                setParticipantText(getContactName(newContact))
+            }
+            else{
+                setParticipants(contacts)
+                setParticipantText(getContactName(contacts))
+            }
         }}/>
 
     }
