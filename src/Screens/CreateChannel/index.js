@@ -93,7 +93,7 @@ const CreateChannel=({route})=> {
             // var newContact = contacts
             if(isEditingChannel) {
                 var newContact = participants.concat(contacts.filter((item, index) => {
-                    return participants.indexOf(item) === index
+                    return participants.indexOf(item) < 0
                 }))
                 setParticipants(newContact)
                 setParticipantText(getContactName(newContact))
