@@ -100,7 +100,6 @@ export const useInitializeAgora = ( channel_name = '', isContact=false,joinCall 
     }
     const getTokenAndSendPushFromServer = async () => {
         // https://bff-test-app.herokuapp.com/rtc/channel-test/publisher/uid/0/?expiry=60
-
         let params  = {
             channel_or_contact_id: channel_name,
             is_contact:isContact+"",

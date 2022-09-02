@@ -26,7 +26,7 @@ export default function Item({item, onPress=()=>{},selected=false,style,showIcon
   }
   const renderData=()=>{
     if(item){
-      return     <TouchableOpacity activeOpacity={0.9} onPress={() => onPress(id)}>
+      return <TouchableOpacity activeOpacity={0.9} onPress={() => onPress(id)}>
         <View
             style={[
               styles.item,
