@@ -108,7 +108,7 @@ export default function App() {
                     style: "default",
                     onPress: () => {
                         let json = JSON.parse(data.json_data)
-                        var param={isCallRecieved:true}
+                        var param={isCallRecieved:true, channel_name:json.channel_name}
                         if(json.call_type === 'channel'){
                             let channel = json.channel
                             channel.participants = json.participants

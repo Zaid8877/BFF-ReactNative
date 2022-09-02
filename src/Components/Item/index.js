@@ -9,55 +9,66 @@ export default function Item({item, onPress=()=>{},selected=false,style,showIcon
   const {channel_name, participants, image, id} = item;
   const getParticipantsName = ()=>{
     var parts = ''
-    // if(typeof participants === Array) {
+    if(!!participants) {
+      // if(typeof participants === Array) {
       participants.map(item => {
         parts += item.name + ', '
       })
       return parts.substring(0, parts.length - 2)
-    // }
+      // }
+    }
+    else{
+      return parts
+    }
     // else{
     //   return participants
     // }
   }
-  return (
-    <TouchableOpacity activeOpacity={0.9} onPress={() => onPress(id)}>
-      <View
-        style={[
-          styles.item,
-          {backgroundColor: selected ? Colors.primary : 'white'},
-          style
-        ]}>
-        {selected ? <View style={styles.triangle} /> : null}
-        <View style={[styles.imageView, !image? {justifyContent: 'center'}: {padding: 12}]}>
-          {image && <Image source={image} style={styles.image} />}
+  const renderData=()=>{
+    if(item){
+      return     <TouchableOpacity activeOpacity={0.9} onPress={() => onPress(id)}>
+        <View
+            style={[
+              styles.item,
+              {backgroundColor: selected ? Colors.primary : 'white'},
+              style
+            ]}>
+          {selected ? <View style={styles.triangle} /> : null}
+          <View style={[styles.imageView, !image? {justifyContent: 'center'}: {padding: 12}]}>
+            {image && <Image source={image} style={styles.image} />}
 
-          {!image && <Text style={{ textAlign: 'center', color: Colors.black, fontSize: 36, fontWeight: 'bold' }}>{channel_name.charAt(0).toUpperCase()}</Text>
-          }
-          {selected || showIcon ? (
-            <View style={styles.iconView}>
-              <Icon name="check" color="white" />
-            </View>
-          ) : null}
+            {!image && <Text style={{ textAlign: 'center', color: Colors.black, fontSize: 36, fontWeight: 'bold' }}>{!!channel_name?channel_name.charAt(0).toUpperCase():""}</Text>
+            }
+            {selected || showIcon ? (
+                <View style={styles.iconView}>
+                  <Icon name="check" color="white" />
+                </View>
+            ) : null}
+          </View>
+          <View style={styles.textView}>
+            <Text
+                style={[
+                  styles.heading,
+                  {color: selected ? 'white' : Colors.textDark},
+                ]}>
+              {channel_name}
+            </Text>
+            <Text
+                style={[
+                  styles.text,
+                  {color: selected ? 'white' : Colors.textDark},
+                ]}>
+              {getParticipantsName()}
+            </Text>
+          </View>
         </View>
-        <View style={styles.textView}>
-          <Text
-            style={[
-              styles.heading,
-              {color: selected ? 'white' : Colors.textDark},
-            ]}>
-            {channel_name}
-          </Text>
-          <Text
-            style={[
-              styles.text,
-              {color: selected ? 'white' : Colors.textDark},
-            ]}>
-            {getParticipantsName()}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    }
+    else{
+      return null
+    }
+  }
+  return (<>{renderData()}</>);
 }
 
 const styles = StyleSheet.create({

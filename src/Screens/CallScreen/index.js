@@ -31,7 +31,8 @@ import {logToConsole} from "../../Configs/ReactotronConfig";
 export default function CallScreen({route}) {
     const userInfo=useUserState()
     let recentCalls = useRecentChannelState();
-    const {channel,contact,isCallRecieved=false} = route.params
+    const {channel,contact,isCallRecieved=false, channel_name=''} = route.params
+    console.log(channel, contact,isCallRecieved, channel_name)
     const isHost = true
     useRequestAudioHook();
     const dispatch= useDispatch()
@@ -40,12 +41,7 @@ export default function CallScreen({route}) {
     const getContactChannel=()=>{
         let name=''
         if(isCallRecieved){
-            if(contact){
-                name="channel_contact_"+contact.id
-            }
-            else{
-                name = "channel_"+channel.id
-            }
+           name = channel_name
         }
         else{
             name = contact?contact.id:channel.id
