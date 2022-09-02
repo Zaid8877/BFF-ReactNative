@@ -234,6 +234,11 @@ export const useInitializeAgora = ( channel_name = '', isContact=false,joinCall 
         setIsSpeakerEnable(!isSpeakerEnable);
     }, [isSpeakerEnable]);
 
+    const setIsSpeaker = useCallback(async (isSpeaker) => {
+        await rtcEngine.current?.setEnableSpeakerphone(isSpeaker);
+        setIsSpeakerEnable(isSpeaker);
+    }, [isSpeakerEnable]);
+
     const destroyAgoraEngine = useCallback(async () => {
         await rtcEngine.current?.destroy();
     }, []);
@@ -257,6 +262,7 @@ export const useInitializeAgora = ( channel_name = '', isContact=false,joinCall 
         leaveChannel,
         toggleIsMute,
         toggleIsSpeakerEnable,
+        setIsSpeaker,
         onLoadingChannels,
         peerMuted,
     };

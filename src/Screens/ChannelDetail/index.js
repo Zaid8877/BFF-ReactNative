@@ -33,7 +33,6 @@ const ChannelDetail = ({route}) => {
     })
     const [channelDetail,setChannelDetail]=useState({})
     const isHost = userInfo.id === channelDetail.admin_user_id
-    console.log(userInfo.id, channelDetail.admin_user_id)
 
     const {participants} = channelDetail
 
@@ -69,7 +68,6 @@ const ChannelDetail = ({route}) => {
             } else {
                 let channelDetail=data.channel
                 channelDetail.participants = data.participants
-                console.log((channelDetail))
                 setChannelDetail(channelDetail)
                 // setChannels(replaceData ? data.data : channels.length === 0 ? data.data : channels.concat(data.data))
                 // setTotalRecords(data.totalRecords)

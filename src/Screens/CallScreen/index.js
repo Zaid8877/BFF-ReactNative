@@ -32,7 +32,6 @@ export default function CallScreen({route}) {
     const userInfo=useUserState()
     let recentCalls = useRecentChannelState();
     const {channel,contact,isCallRecieved=false, channel_name=''} = route.params
-    console.log(channel, contact,isCallRecieved, channel_name)
     const isHost = true
     useRequestAudioHook();
     const dispatch= useDispatch()
@@ -59,6 +58,7 @@ export default function CallScreen({route}) {
         leaveChannel,
         toggleIsMute,
         toggleIsSpeakerEnable,
+        setIsSpeaker,
         onLoadingChannels,
         peerMuted,
     } = useInitializeAgora(getContactChannel(), !!contact, isCallRecieved);
@@ -68,13 +68,16 @@ export default function CallScreen({route}) {
     //contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-")
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
     useEffect(()=>{
+
+        if(joinSucceed && isCallRecieved) {
+            setIsSpeaker(false)
+        }
+    },[joinSucceed])
+    useEffect(()=>{
         if(isCallRecieved)
             onJoinChannel()
     },[])
     useEffect(()=>{
-        logToConsole({previousJoinedState})
-        logToConsole({joinSucceed})
-        logToConsole({peerIds})
         if(previousJoinedState && !joinSucceed && peerIds.length === 0)
             Navigator.goBack()
     },[previousJoinedState, joinSucceed])
@@ -85,7 +88,6 @@ export default function CallScreen({route}) {
         // setPreviousJoinedState(joinSucceed?false:true)
     },[joinSucceed])
 
-    logToConsole(peerIds.length)
 
     const onJoinChannel = ()=>{
           joinChannel().then(item=>{
