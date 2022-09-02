@@ -59,6 +59,8 @@ export const useInitializeAgora = ( channel_name = '', isContact=false,joinCall 
     const [isMute, setIsMute] = useState(false);
     const [isSpeakerEnable, setIsSpeakerEnable] = useState(true);
     const [peerMuted, setPeerMuted] = useState({id:'', isMute:false});
+    const [userJoined, setUserJoined] = useState(false);
+    const [userLeft, setUserLeft] = useState(false);
     const rtcEngine = useRef(null);
     const {
         onCallApi: onCallApiToGetToken,
@@ -155,18 +157,20 @@ export const useInitializeAgora = ( channel_name = '', isContact=false,joinCall 
 
                 return peerIdsLocal;
             });
+            setUserJoined(true)
         });
 
         rtcEngine.current?.addListener('UserOffline', (uid, reason) => {
             console.log('UserOffline', uid, reason);
-            const remainingPears = peerIds.filter((id) => id !== uid)
-            if (remainingPears.length === 0) {
-                leaveChannel()
-            }
+            // const remainingPears = peerIds.filter((id) => id !== uid)
+            // if (remainingPears.length === 0) {
+            //     leaveChannel()
+            // }
 
             setPeerIds((peerIdsLocal) => {
                 return peerIdsLocal.filter((id) => id !== uid);
             });
+            setUserLeft(true)
         });
 
 
@@ -265,5 +269,7 @@ export const useInitializeAgora = ( channel_name = '', isContact=false,joinCall 
         setIsSpeaker,
         onLoadingChannels,
         peerMuted,
+        userJoined, userLeft,
+        setUserLeft, setUserJoined
     };
 };

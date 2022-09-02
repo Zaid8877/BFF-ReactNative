@@ -29,21 +29,20 @@ import {logToConsole} from "../../Configs/ReactotronConfig";
 
 
 export default function CallScreen({route}) {
-    const userInfo=useUserState()
+    const userInfo = useUserState()
     let recentCalls = useRecentChannelState();
-    const {channel,contact,isCallRecieved=false, channel_name=''} = route.params
+    const {channel, contact, isCallRecieved = false, channel_name = ''} = route.params
     const isHost = true
     useRequestAudioHook();
-    const dispatch= useDispatch()
-    const [previousJoinedState, setPreviousJoinedState]=useState(false)
+    const dispatch = useDispatch()
+    const [previousJoinedState, setPreviousJoinedState] = useState(false)
 
-    const getContactChannel=()=>{
-        let name=''
-        if(isCallRecieved){
-           name = channel_name
-        }
-        else{
-            name = contact?contact.id:channel.id
+    const getContactChannel = () => {
+        let name = ''
+        if (isCallRecieved) {
+            name = channel_name
+        } else {
+            name = contact ? contact.id : channel.id
         }
         return name
     }
@@ -61,53 +60,63 @@ export default function CallScreen({route}) {
         setIsSpeaker,
         onLoadingChannels,
         peerMuted,
+        userJoined,
+        userLeft,
+        setUserLeft,
+        setUserJoined
     } = useInitializeAgora(getContactChannel(), !!contact, isCallRecieved);
     // } = useInitializeAgora(  getContactChannel());
     // } = useInitializeAgora(    contact?"channel_"+getContactChannel(contact.id, userInfo.id): getContactChannel(channel.id));
     // } = useInitializeAgora(    contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-"));
     //contact?"channel_"+getContactChannel(contact.id, userInfo.id): channel.channel_name.replace("","-")
     // useEffect(()=>{setChannelName(channel.channel_name.replace(" ","-"))},[])
-    useEffect(()=>{
+    useEffect(() => {
 
-        if(joinSucceed && isCallRecieved) {
+        if (joinSucceed && isCallRecieved) {
             setIsSpeaker(false)
         }
-    },[joinSucceed])
-    useEffect(()=>{
-        if(isCallRecieved)
+    }, [joinSucceed])
+    useEffect(() => {
+        if (isCallRecieved)
             onJoinChannel()
-    },[])
-    useEffect(()=>{
-        if(previousJoinedState && !joinSucceed && peerIds.length === 0)
-            Navigator.goBack()
-    },[previousJoinedState, joinSucceed])
-    useEffect(()=>{
-        if(!previousJoinedState && joinSucceed){
+    }, [])
+
+    useEffect(() => {
+            if (userLeft) {
+                if (peerIds.length === 1) {
+                    Navigator.goBack()
+                }
+            }
+            setUserLeft(false)
+            if (userJoined)
+                setUserJoined(false)
+        }
+        , [userLeft])
+    useEffect(() => {
+        if (!previousJoinedState && joinSucceed) {
             setPreviousJoinedState(true)
         }
         // setPreviousJoinedState(joinSucceed?false:true)
-    },[joinSucceed])
+    }, [joinSucceed])
 
 
-    const onJoinChannel = ()=>{
-          joinChannel().then(item=>{
+    const onJoinChannel = () => {
+        joinChannel().then(item => {
         })
-        if(isSpeakerEnable){
+        if (isSpeakerEnable) {
             toggleIsSpeakerEnable()
         }
-        const callType=contact?"contact":"channel"
-        const dataToSave = contact?contact:channel
-        dataToSave.callType=callType
+        const callType = contact ? "contact" : "channel"
+        const dataToSave = contact ? contact : channel
+        dataToSave.callType = callType
         if (recentCalls.size === 0) {
             recentCalls.push(dataToSave)
-        }
-        else{
+        } else {
             let arr = []
             arr.push(dataToSave)
-            recentCalls.map((itemChannel,index)=>{
-                if(itemChannel.callType === callType && dataToSave.id === itemChannel.id){
-                }
-                else{
+            recentCalls.map((itemChannel, index) => {
+                if (itemChannel.callType === callType && dataToSave.id === itemChannel.id) {
+                } else {
                     arr.push(itemChannel)
                 }
 
@@ -117,8 +126,8 @@ export default function CallScreen({route}) {
 
         dispatch(setRecentChannel(recentCalls))
     }
-    const onLeaveChannel = ()=>{
-        leaveChannel().then(it=>
+    const onLeaveChannel = () => {
+        leaveChannel().then(it =>
             Navigator.goBack()
         )
 
@@ -129,7 +138,10 @@ export default function CallScreen({route}) {
             <StatusBar backgroundColor={Colors.primary} barStyle='light-content'/>
             <View style={styles.header}>
                 <Icon name="chevron-left" color={Colors.white} size={32} onPress={() => Navigator.goBack()}/>
-                        <Text style={[styles.heading,{flex:1, textAlign:'center'}]}>{contact?contact.name:channel.channel_name}</Text>
+                <Text style={[styles.heading, {
+                    flex: 1,
+                    textAlign: 'center'
+                }]}>{contact ? contact.name : channel.channel_name}</Text>
 
             </View>
 
@@ -148,7 +160,7 @@ export default function CallScreen({route}) {
             {/*</View>*/}
 
 
-            <View style={{flex: 1, marginTop:Metrics.defaultMargin}}>
+            <View style={{flex: 1, marginTop: Metrics.defaultMargin}}>
                 {/*<Button*/}
                 {/*    onPress={peerIds.length > 2 ? alert('Only 2 User are Allowed in the Channel') : joinSucceed ? leaveChannel : joinChannel}*/}
                 {/*    title={`${joinSucceed ? 'Leave' : 'Join'} channel`}*/}
@@ -156,10 +168,15 @@ export default function CallScreen({route}) {
 
                 {joinSucceed &&
                     <View>
-                        <Text style={{alignSelf: 'center', fontWeight: 'bold', marginBottom:20, fontSize: 26}}>{peerIds.length > 1 ? 'Connected' : 'Ringing'}</Text>
+                        <Text style={{
+                            alignSelf: 'center',
+                            fontWeight: 'bold',
+                            marginBottom: 20,
+                            fontSize: 26
+                        }}>{peerIds.length > 1 ? 'Connected' : 'Ringing'}</Text>
                     </View>
                 }
-                <CallDurationComponent joinSucceded={joinSucceed && peerIds.length>1}/>
+                <CallDurationComponent joinSucceded={joinSucceed && peerIds.length > 1}/>
                 {channel && channel.participants.length > 0 &&
                     <FlatList
                         style={{padding: Metrics.defaultMargin}}
@@ -167,18 +184,24 @@ export default function CallScreen({route}) {
                         keyExtractor={item => item.id}
                         numColumns={2}
                         renderItem={({item}) => (
-                            <View style={{flex:1}}>
-                            <CallContactsItem
-                                showIcon={false}
-                                item={item}
-                                style={{backgroundColor: Colors.lightGrey}}
-                                peer={peerMuted.id}
-                                isMute={peerMuted.isMute} />
+                            <View style={{flex: 1}}>
+                                <CallContactsItem
+                                    showIcon={false}
+                                    item={item}
+                                    style={{backgroundColor: Colors.lightGrey}}
+                                    peer={peerMuted.id}
+                                    isMute={peerMuted.isMute}/>
                             </View>
                         )}
                     />
                 }
-                {contact && <View style={{flex:1, alignItems:'center', alignSelf:'center', alignContent:'center', justifyContent:'center'}}><CallContactsItem
+                {contact && <View style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    alignContent: 'center',
+                    justifyContent: 'center'
+                }}><CallContactsItem
                     showIcon={false}
                     item={contact}
                     style={{backgroundColor: Colors.lightGrey}}
@@ -186,7 +209,7 @@ export default function CallScreen({route}) {
                     isMute={peerMuted.isMute}
                 />
                 </View>
-                    }
+                }
 
                 {/* <TouchableOpacity
                     activeOpacity={0.9}
@@ -197,34 +220,56 @@ export default function CallScreen({route}) {
                       </View>
                     </View>
                   </TouchableOpacity> */}
-                <View style={{justifyContent:'flex-end'}}>
-                    {joinSucceed && <View style={{flexDirection:'row',width:'100%',justifyContent:'space-between',alignItems:'center',  backgroundColor:colors.grey, padding:Metrics.defaultMargin}}>
-                        <TouchableOpacity activeOpacity={0.9} style={{borderRadius:40,padding:10, backgroundColor: isMute?colors.black:colors.transparent}} onPress={()=>{toggleIsMute()}}>
-                            <Image source={Images.mic} style={[{height:30, width:30, tintColor: colors.white}]}  />
+                <View style={{justifyContent: 'flex-end'}}>
+                    {joinSucceed && <View style={{
+                        flexDirection: 'row',
+                        width: '100%',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        backgroundColor: colors.grey,
+                        padding: Metrics.defaultMargin
+                    }}>
+                        <TouchableOpacity activeOpacity={0.9} style={{
+                            borderRadius: 40,
+                            padding: 10,
+                            backgroundColor: isMute ? colors.black : colors.transparent
+                        }} onPress={() => {
+                            toggleIsMute()
+                        }}>
+                            <Image source={Images.mic} style={[{height: 30, width: 30, tintColor: colors.white}]}/>
                         </TouchableOpacity>
 
 
-                        <TouchableOpacity activeOpacity={0.9} style={{borderRadius:40,padding:10, backgroundColor:colors.red}} onPress={onLeaveChannel}>
-                            <Image source={Images.endCall} style={[{height:30, width:30, tintColor: colors.white}]}  />
+                        <TouchableOpacity activeOpacity={0.9}
+                                          style={{borderRadius: 40, padding: 10, backgroundColor: colors.red}}
+                                          onPress={onLeaveChannel}>
+                            <Image source={Images.endCall} style={[{height: 30, width: 30, tintColor: colors.white}]}/>
                         </TouchableOpacity>
 
-                        <TouchableOpacity activeOpacity={0.9} style={{borderRadius:40,padding:10, backgroundColor: isSpeakerEnable?colors.black:colors.transparent}} onPress={()=>{toggleIsSpeakerEnable()}}>
-                            <Image source={Images.speaker} style={[{height:30, width:30, tintColor: colors.white}]}  />
+                        <TouchableOpacity activeOpacity={0.9} style={{
+                            borderRadius: 40,
+                            padding: 10,
+                            backgroundColor: isSpeakerEnable ? colors.black : colors.transparent
+                        }} onPress={() => {
+                            toggleIsSpeakerEnable()
+                        }}>
+                            <Image source={Images.speaker} style={[{height: 30, width: 30, tintColor: colors.white}]}/>
                         </TouchableOpacity>
                     </View>}
-                      {!joinSucceed &&
-                          <>
-                          {/*{!isCallRecieved &&*/}
-                          <Button text={"Start Call"}  disabled={onLoadingChannels} style={{margin:Metrics.defaultMargin}} onPress={onJoinChannel}/>
-                          {/*}*/}
-                          {/*{isCallRecieved &&*/}
-                          {/*    <View style={{flexDirection:'row'}}>*/}
-                          {/*      <Button text={"Join Call"}  disabled={onLoadingChannels} style={{margin:Metrics.defaultMargin}} onPress={onJoinChannel}/>*/}
-                          {/*      <Button text={"End Call"}  disabled={onLoadingChannels} style={{margin:Metrics.defaultMargin}} onPress={onLeaveChannel}/>*/}
-                          {/*    </View>*/}
-                          {/*}*/}
-                          </>
-                      }
+                    {!joinSucceed &&
+                        <>
+                            {/*{!isCallRecieved &&*/}
+                            <Button text={"Start Call"} disabled={onLoadingChannels}
+                                    style={{margin: Metrics.defaultMargin}} onPress={onJoinChannel}/>
+                            {/*}*/}
+                            {/*{isCallRecieved &&*/}
+                            {/*    <View style={{flexDirection:'row'}}>*/}
+                            {/*      <Button text={"Join Call"}  disabled={onLoadingChannels} style={{margin:Metrics.defaultMargin}} onPress={onJoinChannel}/>*/}
+                            {/*      <Button text={"End Call"}  disabled={onLoadingChannels} style={{margin:Metrics.defaultMargin}} onPress={onLeaveChannel}/>*/}
+                            {/*    </View>*/}
+                            {/*}*/}
+                        </>
+                    }
                 </View>
             </View>
 
