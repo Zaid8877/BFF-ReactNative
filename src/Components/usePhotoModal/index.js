@@ -71,13 +71,13 @@ const usePhotoModal = ({
     if (split.length > 1) {
       nameBeforeExtension = split[split.length - 2];
       nameBeforeExtension = `${nameBeforeExtension}${randomNumber}`;
-      split[split.length - 2] = nameBeforeExtension + timeStampAddition;
+      nameBeforeExtension = nameBeforeExtension + timeStampAddition;
     } else {
       nameBeforeExtension = split[split.length - 1];
       nameBeforeExtension = `${nameBeforeExtension}${randomNumber}`;
-      split[split.length - 1] = nameBeforeExtension + timeStampAddition;
+      nameBeforeExtension = nameBeforeExtension + timeStampAddition;
     }
-    return split.join('.');
+    return nameBeforeExtension+".jpg";
   };
 
   const selectPhoto = async typeFunc => {

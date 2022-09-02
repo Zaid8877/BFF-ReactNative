@@ -21,15 +21,20 @@ import colors from "../../Theme/Colors";
 import {useDispatch} from "react-redux";
 import {setRecentChannel} from '../../Store/actions/RecentChannelActions'
 import {useIsFocused} from "@react-navigation/native";
+import useUserState from "../../CustomHooks/useUserState";
 
 const ChannelDetail = ({route}) => {
     let recentCalls = useRecentChannelState();
+    const userInfo = useUserState()
     const dispatch= useDispatch()
     const {channel} = route.params
     const chanelHistory = useRecentChannelState().filter(item => {
         return channel.id === item.id && item.callType!=='contact'
     })
     const [channelDetail,setChannelDetail]=useState({})
+    const isHost = userInfo.id === channelDetail.admin_user_id
+    console.log(userInfo.id, channelDetail.admin_user_id)
+
     const {participants} = channelDetail
 
     const [isDataLoaded, setDataLoaded] = useState(false)
@@ -64,6 +69,7 @@ const ChannelDetail = ({route}) => {
             } else {
                 let channelDetail=data.channel
                 channelDetail.participants = data.participants
+                console.log((channelDetail))
                 setChannelDetail(channelDetail)
                 // setChannels(replaceData ? data.data : channels.length === 0 ? data.data : channels.concat(data.data))
                 // setTotalRecords(data.totalRecords)
@@ -140,6 +146,31 @@ const ChannelDetail = ({route}) => {
                 onPress:()=>{}
             }]);
     }
+    const renderBottomButtons=()=>{
+        if(isHost) {
+            return <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                margin: Metrics.defaultMargin,
+                flex: 0.15,
+                justifyContent: 'center'
+            }}>
+                <Button text={"Edit Channel"} style={{
+                    paddingLeft: Metrics.defaultMargin,
+                    paddingRight: Metrics.defaultMargin,
+                    marginRight: Metrics.smallMargin
+                }} onPress={() => {
+                    Navigator.navigate("CreateChannel", {channel: channelDetail})
+                }}/>
+                <Button text={"Delete Channel"} textStyle={{color: colors.red}}
+                        style={{paddingLeft: Metrics.defaultMargin, paddingRight: Metrics.defaultMargin}}
+                        secondary={true} onPress={() => {
+                    showDeleteAlert()
+                }}/>
+            </View>
+        }
+        return null
+    }
     return (
         <RootView statusBar={Colors.lightGrey} isLoading={onLoadingChannels||onDeletingChannel}>
 
@@ -193,12 +224,7 @@ const ChannelDetail = ({route}) => {
                     {/*        )}*/}
                     {/*    />*/}
                     {/*}*/}
-                    <View style={{flexDirection:'row',alignItems:'center',margin:Metrics.defaultMargin, flex:0.15, justifyContent:'center'}}>
-                        <Button text={"Edit Channel"} style={{paddingLeft:Metrics.defaultMargin,paddingRight:Metrics.defaultMargin, marginRight:Metrics.smallMargin}} onPress={()=>{
-                            Navigator.navigate("CreateChannel",{channel:channelDetail})
-                        }}/>
-                        <Button text={"Delete Channel"}  textStyle={{color:colors.red}} style={{paddingLeft:Metrics.defaultMargin,paddingRight:Metrics.defaultMargin}} secondary={true} onPress={()=>{showDeleteAlert()}}/>
-                    </View>
+                    {renderBottomButtons()}
                 </View>
 
             </>
