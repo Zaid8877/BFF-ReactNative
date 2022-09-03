@@ -7,17 +7,66 @@ import {store, persistor} from './src/Store'
 import {RootSiblingParent} from 'react-native-root-siblings';
 import {Alert, LogBox} from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import RNCallKeep from "react-native-callkeep";
 import {logToConsole} from "./src/Configs/ReactotronConfig";
 import crashlytics from '@react-native-firebase/crashlytics';
 import messaging from "@react-native-firebase/messaging";
 import Navigator from "./src/Utils/Navigator";
 import useUserState from "./src/CustomHooks/useUserState";
+import Sound from "react-native-sound";
+import SoundsUtils from "./src/Utils/SoundsUtils";
 
+Sound.setCategory('Playback');
+
+var audio = new Sound(
+    SoundsUtils.callAlert,
+    null,
+    error => {
+        if (error) {
+            console.log('failed to load the sound', error);
+            return;
+        }
+        // if loaded successfully
+        console.log(
+            'duration in seconds: ' +
+            audio.getDuration() +
+            'number of channels: ' +
+            audio.getNumberOfChannels(),
+        );
+    },
+);
+let isAlertShown=false
 export default function App() {
     LogBox.ignoreAllLogs()
+    // const [isAlertShown,setIsAlertShown]=useState(false)
+    const [playing, setPlaying] = useState();
     useEffect(() => {
+        audio.setVolume(1);
+        return () => {
+            audio.release();
+        };
+    }, []);
+    const playPause = () => {
+        if (audio.isPlaying()) {
+            audio.pause();
+            setPlaying(false);
+            // setIsAlertShown(false)
+            isAlertShown=false
+        } else {
+            setPlaying(true);
+            audio.play(success => {
+                if (success) {
+                    setPlaying(false);
+                    console.log('successfully finished playing');
+                } else {
+                    setPlaying(false);
+                    console.log('playback failed due to audio decoding errors');
+                }
+            });
+        }
+    };
+    useEffect(()=> {
         /**
          * When a notification from FCM has triggered the application
          * to open from a quit state, this method will return a `RemoteMessage`
@@ -25,109 +74,118 @@ export default function App() {
          * another method.
          */
         messaging()
-            .getInitialNotification()
-            .then(async (remoteMessage) => {
+                .getInitialNotification()
+                .then(async (remoteMessage) => {
+                    if (remoteMessage) {
+                        console.log(
+                            'getInitialNotification:' +
+                            'Notification caused app to open from quit state',
+                        );
+                        console.log(remoteMessage);
+                        alert(
+                            'getInitialNotification: Notification caused app to open from quit state',
+                        );
+                    }
+                });
+
+            /**
+             * When the user presses a notification displayed via FCM, this listener
+             * will be called if the app has opened from a background state.
+             * See `getInitialNotification` to see how to watch for when a notification
+             * opens the app from a quit state.
+             */
+            messaging().onNotificationOpenedApp(async (remoteMessage) => {
                 if (remoteMessage) {
                     console.log(
-                        'getInitialNotification:' +
-                        'Notification caused app to open from quit state',
+                        'onNotificationOpenedApp: ' +
+                        'Notification caused app to open from background state',
                     );
                     console.log(remoteMessage);
-                    alert(
-                        'getInitialNotification: Notification caused app to open from quit state',
-                    );
+                    //
+                    // alert(
+                    //     'onNotificationOpenedApp: Notification caused app to open from background state',
+                    // );
+                    showAlertForCall(remoteMessage)
                 }
             });
 
-        /**
-         * When the user presses a notification displayed via FCM, this listener
-         * will be called if the app has opened from a background state.
-         * See `getInitialNotification` to see how to watch for when a notification
-         * opens the app from a quit state.
-         */
-        messaging().onNotificationOpenedApp(async (remoteMessage) => {
-            if (remoteMessage) {
-                console.log(
-                    'onNotificationOpenedApp: ' +
-                    'Notification caused app to open from background state',
-                );
-                console.log(remoteMessage);
-                //
-                // alert(
-                //     'onNotificationOpenedApp: Notification caused app to open from background state',
-                // );
-                showAlertForCall(remoteMessage)
-            }
-        });
-
-        /**
-         * Set a message handler function which is called when the app is
-         * in the background or terminated. In Android, a headless task is created,
-         * allowing you to access the React Native environment to perform tasks
-         * such as updating local storage, or sending a network request.
-         */
-        messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-            console.log('Message handled in the background!', remoteMessage);
-            showAlertForCall(remoteMessage)
-
-        });
-
-        /**
-         * When any FCM payload is received, the listener callback is called with
-         * a `RemoteMessage`. Returns an unsubscribe function to stop listening
-         * for new messages.
-         */
-        const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-            // const userInfo=useUserState()
-            // if (userInfo && userInfo.token) {
-               showAlertForCall(remoteMessage)
-                console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
-            // }
-        });
-
-        /**
-         * Apps can subscribe to a topic, which allows the FCM server to send
-         * targeted messages to only those devices subscribed to that topic.
-         */
-
-        return () => {
-            unsubscribe;
             /**
-             * Unsubscribe the device from a topic.
+             * Set a message handler function which is called when the app is
+             * in the background or terminated. In Android, a headless task is created,
+             * allowing you to access the React Native environment to perform tasks
+             * such as updating local storage, or sending a network request.
              */
-            // messaging().unsubscribeFromTopic(TOPIC);
-        };
-    }, []);
+            messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+                console.log('Message handled in the background!', remoteMessage);
+                showAlertForCall(remoteMessage)
 
+            });
+
+            /**
+             * When any FCM payload is received, the listener callback is called with
+             * a `RemoteMessage`. Returns an unsubscribe function to stop listening
+             * for new messages.
+             */
+            const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+                // const userInfo=useUserState()
+                // if (userInfo && userInfo.token) {
+                showAlertForCall(remoteMessage)
+                // }
+            });
+
+            /**
+             * Apps can subscribe to a topic, which allows the FCM server to send
+             * targeted messages to only those devices subscribed to that topic.
+             */
+
+            return () => {
+                unsubscribe;
+                /**
+                 * Unsubscribe the device from a topic.
+                 */
+                // messaging().unsubscribeFromTopic(TOPIC);
+            };
+    });
     const showAlertForCall = (remoteMessage)=>{
-        let data = remoteMessage.data
-        Alert.alert("Call", data.title + " " + data.body,
-            [
-                {
-                    text: "Answer",
-                    style: "default",
-                    onPress: () => {
-                        let json = JSON.parse(data.json_data)
-                        var param={isCallRecieved:true, channel_name:json.channel_name}
-                        if(json.call_type === 'channel'){
-                            let channel = json.channel
-                            channel.participants = json.participants
-                            param.channel=channel
-                        }
-                        else{
-                            param.contact=json.contact
-                        }
-                        logToConsole(param)
-                        Navigator.navigate("CallScreen", param)
-                    }
-                }, {
-                text: "Reject",
-                style: "default",
-                onPress: () => {
-                }
-            },
-            ]
-        );
+        if(!isAlertShown) {
+            isAlertShown=true
+            // setIsAlertShown(true)
+            // setTimeout(() => {
+            //     if(!isAlertShown) {
+                    playPause()
+                    let data = remoteMessage.data
+                    Alert.alert("Call", data.title + " " + data.body,
+                         [
+                            {
+                                text: "Answer",
+                                style: "default",
+                                onPress: () => {
+                                    let json = JSON.parse(data.json_data)
+                                    var param = {isCallRecieved: true, channel_name: json.channel_name}
+                                    if (json.call_type === 'channel') {
+                                        let channel = json.channel
+                                        channel.participants = json.participants
+                                        param.channel = channel
+                                    } else {
+                                        param.contact = json.contact
+                                    }
+                                    logToConsole(param)
+                                    Navigator.navigate("CallScreen", param)
+                                    playPause()
+                                }
+                            }, {
+                            text: "Reject",
+                            style: "default",
+                            onPress: () => {
+                                playPause()
+                            }
+                        },
+                        ]
+                    );
+                // }
+            // }, 200)
+        }
+
     }
 
     useEffect(() => {

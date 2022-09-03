@@ -172,7 +172,7 @@ const ChannelDetail = ({route}) => {
     return (
         <RootView statusBar={Colors.lightGrey} isLoading={onLoadingChannels||onDeletingChannel}>
 
-            <Header secondary title='Channel Detail'  showAddIcon={true} addIconName={'phone'} onPressRight={()=>{
+            <Header secondary title={channel.channel_name}  showAddIcon={true} addIconName={'phone'} onPressRight={()=>{
                 Navigator.navigate("CallScreen",{channel:channelDetail})
             }} leftIcon='chevron-left'
                     onPressLeft={() => Navigator.goBack()}/>

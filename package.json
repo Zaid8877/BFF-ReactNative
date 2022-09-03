@@ -57,6 +57,7 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "2.18.1",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-sound": "^0.11.2",
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^12.4.3",
     "react-native-swiper": "^1.6.0",
